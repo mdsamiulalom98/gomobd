@@ -59,7 +59,7 @@ class ShippingChargeController extends Controller
         $input['status'] = $request->status ? 1 : 0;
         $update_data->update($input);
 
-        Toastr::success('Success', 'Data update successfully');
+        Toastr::success('Data update successfully', 'Success', ['positionClass' => 'toast-top-right']);;
         return redirect()->route('shippingcharges.index');
     }
 

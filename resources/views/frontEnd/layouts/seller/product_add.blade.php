@@ -34,7 +34,7 @@
                             data-parsley-validate="" enctype="multipart/form-data">
                             @csrf
 
-                            <div class="col-sm-4">
+                            <div class="col-sm-8">
                                 <div class="form-group mb-3">
                                     <label for="name" class="form-label">Product Name *</label>
                                     @if (request()->has('product'))
@@ -43,7 +43,7 @@
                                             required />
                                         <input type="hidden" name="product" value="{{ request()->get('product') }}">
                                     @else
-                                        <select class="form-control select2 @error('product') is-invalid @enderror"
+                                        <select class="form-control form-select select2 @error('product') is-invalid @enderror"
                                             name="product" value="{{ old('product') }}" id="product" required>
                                             <option value="">Select..</option>
                                             @foreach ($products as $product)
@@ -62,7 +62,7 @@
                             <div class="col-sm-4">
                                 <div class="form-group mb-3">
                                     <label for="category_id" class="form-label">Categories *</label>
-                                    <select class="form-control select2 @error('category_id') is-invalid @enderror"
+                                    <select class="form-control form-select select2 @error('category_id') is-invalid @enderror"
                                         name="category_id" value="{{ old('category_id') }}" id="category_id" required>
                                         <option value="">Select..</option>
                                         @foreach ($categories as $category)
@@ -79,8 +79,6 @@
                                 </div>
                             </div>
                             <!-- col end -->
-
-
 
                             <div class="col-sm-4 mb-3">
                                 <label for="image" class="form-label">Product Image (ctrl to multiple) *</label>
@@ -105,34 +103,36 @@
                             </div>
                             <!-- col end -->
 
-                            <div class="col-sm-4">
-                                <div class="form-group mb-3">
-                                    <label for="type" class="form-label">Product Type</label>
-                                    <select class="form-control select2 @error('type') is-invalid @enderror"
-                                        value="{{ old('type') }}" id="product_type" name="type" >
-                                        <option value="1" {{ $product->type == 1 ? 'selected' : '' }} >Normal Product</option>
-                                        <option value="0" {{ $product->type == 0 ? 'selected' : '' }} >Variable Product</option>
+
+                            <div class="col-sm-8 mb-4">
+                                <div class="form-group color-container">
+                                    <label for="proColor" class="form-label">Color </label>
+                                    <select class="form-control form-select select2" name="proColor[]"
+                                        multiple="multiple">
+                                        <option value="">Select</option>
+                                        @foreach ($colors as $color)
+                                            <option value="{{ $color->id }}" @foreach ($product->colors as $selectcolor) @if ($color->id == $selectcolor->id) selected="selected" @endif @endforeach>{{ $color->name }}</option>
+                                        @endforeach
                                     </select>
-                                    @error('type')
+                                    @error('proColor')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
                                     @enderror
                                 </div>
                             </div>
-                            <!-- col-end -->
+                            <!--col end -->
 
                             @if ($product->type == 0)
                                 <div class="variable_product ">
                                     <!-- variable edit part -->
                                     @foreach ($variables as $variable)
                                     <div class="border p-2 mb-2">
-
                                         <div class="row mb-2 ">
                                             <div class="col-sm-3">
                                                 <div class="form-group">
                                                     <label for="sizes" class="form-label">Size/Weight</label>
-                                                    <select class="form-control" name="sizes[]">
+                                                    <select class="form-control form-select" name="sizes[]">
                                                         <option value="">Select</option>
                                                         @foreach ($sizes as $size)
                                                             <option value="{{ $size->name }}"
@@ -150,16 +150,14 @@
                                             <!--col end -->
                                             <div class="col-sm-3">
                                                 <div class="form-group">
-                                                    <label for="up_color" class="form-label">Color </label>
-                                                    <select class="form-control" name="colors[]">
+                                                    <label for="regions" class="form-label">Region</label>
+                                                    <select class="form-control form-select" name="regions[]">
                                                         <option value="">Select</option>
-                                                        @foreach ($colors as $color)
-                                                            <option value="{{ $color->name }}"
-                                                                @if ($variable->color == $color->name) selected @endif>
-                                                                {{ $color->name }}</option>
+                                                        @foreach ($regions as $region)
+                                                            <option value="{{ $region->name }}" @if ($variable->region == $region->name) selected @endif>{{ $region->name }}</option>
                                                         @endforeach
                                                     </select>
-                                                    @error('up_color')
+                                                    @error('regions')
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $message }}</strong>
                                                         </span>
@@ -167,7 +165,6 @@
                                                 </div>
                                             </div>
                                             <!--col end -->
-
 
                                             <!-- col-end -->
                                             <div class="col-sm-3">
@@ -246,7 +243,7 @@
                                         <div class="col-sm-2">
                                             <div class="form-group">
                                                 <label for="roles" class="form-label">Size/Weight *</label>
-                                                <select class="form-control" name="sizes[]">
+                                                <select class="form-control form-select" name="sizes[]">
                                                     <option value="">Select</option>
                                                     @foreach ($sizes as $size)
                                                         <option value="{{ $size->name }}">{{ $size->name }}
@@ -263,15 +260,14 @@
                                         <!--col end -->
                                         <div class="col-sm-2">
                                             <div class="form-group">
-                                                <label for="color" class="form-label">Color </label>
-                                                <select class="form-control" name="colors[]">
+                                                <label for="regions" class="form-label">Region</label>
+                                                <select class="form-control form-select" name="regions[]">
                                                     <option value="">Select</option>
-                                                    @foreach ($colors as $color)
-                                                        <option value="{{ $color->name }}">{{ $color->name }}
-                                                        </option>
+                                                    @foreach ($regions as $region)
+                                                        <option value="{{ $region->name }}">{{ $region->name }}</option>
                                                     @endforeach
                                                 </select>
-                                                @error('color')
+                                                @error('regions')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
                                                     </span>
@@ -367,7 +363,7 @@
                                             <div class="col-sm-2">
                                                 <div class="form-group">
                                                     <label for="roles" class="form-label">Size/Weight</label>
-                                                    <select class="form-control" name="sizes[]">
+                                                    <select class="form-control form-select" name="sizes[]">
                                                         <option value="">Select</option>
                                                         @foreach ($sizes as $size)
                                                             <option value="{{ $size->name }}">{{ $size->name }}
@@ -385,7 +381,7 @@
                                             <div class="col-sm-2">
                                                 <div class="form-group">
                                                     <label for="color" class="form-label">Color </label>
-                                                    <select class="form-control " name="colors[]">
+                                                    <select class="form-control form-select" name="colors[]">
                                                         <option value="">Select</option>
                                                         @foreach ($colors as $color)
                                                             <option value="{{ $color->name }}">
@@ -493,7 +489,7 @@
                                                 <label for="purchase_price" class="form-label">Purchase Price *</label>
                                                 <input type="text"
                                                     class="form-control @error('purchase_price') is-invalid @enderror"
-                                                    name="purchase_price" value="{{ $edit_data->purchase_price }}"
+                                                    name="purchase_price" value="{{ old('purchase_price') }}"
                                                     id="purchase_price" />
                                                 @error('purchase_price')
                                                     <span class="invalid-feedback" role="alert">
@@ -509,7 +505,7 @@
                                                 <label for="old_price" class="form-label">Old Price</label>
                                                 <input type="text"
                                                     class="form-control @error('old_price') is-invalid @enderror"
-                                                    name="old_price" value="{{ $edit_data->old_price }}"
+                                                    name="old_price" value="{{ old('old_price') }}"
                                                     id="old_price" />
                                                 @error('old_price')
                                                     <span class="invalid-feedback" role="alert">
@@ -524,7 +520,7 @@
                                                 <label for="new_price" class="form-label">New Price *</label>
                                                 <input type="text"
                                                     class="form-control @error('new_price') is-invalid @enderror"
-                                                    name="new_price" value="{{ $edit_data->new_price }}"
+                                                    name="new_price" value="{{ old('new_price') }}"
                                                     id="new_price" />
                                                 @error('new_price')
                                                     <span class="invalid-feedback" role="alert">
@@ -540,7 +536,7 @@
                                                 <label for="stock" class="form-label">Stock *</label>
                                                 <input type="text"
                                                     class="form-control @error('stock') is-invalid @enderror"
-                                                    name="stock" value="{{ $edit_data->stock }}" id="stock" />
+                                                    name="stock" value="{{ old('stock') }}" id="stock" />
                                                 @error('stock')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
@@ -625,7 +621,7 @@
                                     <div class="col-sm-2">
                                         <div class="form-group">
                                             <label for="roles" class="form-label">Size/Weight</label>
-                                            <select class="form-control" name="sizes[]">
+                                            <select class="form-control form-select" name="sizes[]">
                                                 <option value="">Select</option>
                                                 @foreach ($sizes as $size)
                                                     <option value="{{ $size->name }}">{{ $size->name }}</option>
@@ -642,7 +638,7 @@
                                     <div class="col-sm-2">
                                         <div class="form-group">
                                             <label for="color" class="form-label">Color</label>
-                                            <select class="form-control" name="colors[]">
+                                            <select class="form-control form-select" name="colors[]">
                                                 <option value="">Select</option>
                                                 @foreach ($colors as $color)
                                                     <option value="{{ $color->name }}">{{ $color->name }}
@@ -740,7 +736,7 @@
                                         <div class="col-sm-2">
                                             <div class="form-group">
                                                 <label for="roles" class="form-label">Size/Weight</label>
-                                                <select class="form-control" name="sizes[]">
+                                                <select class="form-control form-select" name="sizes[]">
                                                     <option value="">Select</option>
                                                     @foreach ($sizes as $size)
                                                         <option value="{{ $size->name }}">{{ $size->name }}
@@ -758,7 +754,7 @@
                                         <div class="col-sm-2">
                                             <div class="form-group">
                                                 <label for="color" class="form-label">Color </label>
-                                                <select class="form-control " name="colors[]">
+                                                <select class="form-control form-select" name="colors[]">
                                                     <option value="">Select</option>
                                                     @foreach ($colors as $color)
                                                         <option value="{{ $color->name }}">{{ $color->name }}
@@ -874,7 +870,7 @@
                             <div class="col-sm-4">
                                 <div class="form-group mb-3">
                                     <label for="stock_alert" class="form-label">Stock Alert </label>
-                                    <input type="text" class="form-control @error('stock_alert') is-invalid @enderror"
+                                    <input type="number" class="form-control @error('stock_alert') is-invalid @enderror"
                                         name="stock_alert" value="{{ $product->stock_alert ?? old('stock_alert') }}" id="stock_alert" />
                                     @error('stock_alert')
                                         <span class="invalid-feedback" role="alert">

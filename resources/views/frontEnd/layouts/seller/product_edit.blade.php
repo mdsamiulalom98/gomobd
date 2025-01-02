@@ -118,7 +118,7 @@
                             <div class="col-sm-4">
                                 <div class="form-group mb-3">
                                     <label for="brand_id" class="form-label">Brands</label>
-                                    <select class="form-control select2 @error('brand_id') is-invalid @enderror"
+                                    <select class="form-control form-select select2 @error('brand_id') is-invalid @enderror"
                                         value="{{ old('brand_id') }}" name="brand_id">
                                         <option value="">Select..</option>
                                         @foreach ($brands as $value)
@@ -188,23 +188,29 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-sm-4">
-                                <div class="form-group mb-3">
-                                    <label for="type" class="form-label">Product Type</label>
-                                    <select class="form-control select2 @error('type') is-invalid @enderror" disabled
-                                        value="{{ old('type') }}" id="product_type" name="type">
-                                        <option value="1" @if ($edit_data->type == 1) selected @endif>Normal Product</option>
-                                        <option value="0" @if ($edit_data->type == 0) selected @endif>Variable Product</option>
+                            
+
+                            <!-- col-end -->
+                            <div class="col-sm-12 mb-4">
+                                <div class="form-group color-container">
+                                    <label for="proColor" class="form-label">Color </label>
+                                    <select class="form-control form-select select2" name="proColor[]" multiple="multiple">
+                                        <option value="">Select..</option>
+                                        @foreach ($colors as $color)
+                                            <option value="{{ $color->id }}"
+                                                @foreach ($selectcolors as $selectcolor) @if ($color->id == $selectcolor->color_id) selected="selected" @endif @endforeach>
+                                                {{ $color->name }}
+                                            </option>
+                                        @endforeach
                                     </select>
-                                    @error('type')
+                                    @error('proColor')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
                                     @enderror
                                 </div>
                             </div>
-
-                            <!-- col-end -->
+                            <!--col end -->
 
                             @if ($edit_data->type == 0)
                                 <div class="variable_product">
@@ -215,7 +221,7 @@
                                             <div class="col-sm-2">
                                                 <div class="form-group">
                                                     <label for="up_size" class="form-label">Size/Weight</label>
-                                                    <select class="form-control" name="up_sizes[]">
+                                                    <select class="form-control form-select" name="up_sizes[]">
                                                         <option value="">Select</option>
                                                         @foreach ($sizes as $size)
                                                             <option value="{{ $size->name }}"
@@ -233,16 +239,16 @@
                                             <!--col end -->
                                             <div class="col-sm-2">
                                                 <div class="form-group">
-                                                    <label for="up_color" class="form-label">Color </label>
-                                                    <select class="form-control" name="up_colors[]">
+                                                    <label for="up_region" class="form-label">Region </label>
+                                                    <select class="form-control form-select" name="up_regions[]">
                                                         <option value="">Select</option>
-                                                        @foreach ($colors as $color)
-                                                            <option value="{{ $color->name }}"
-                                                                @if ($variable->color == $color->name) selected @endif>
-                                                                {{ $color->name }}</option>
+                                                        @foreach ($regions as $region)
+                                                            <option value="{{ $region->name }}"
+                                                                @if ($variable->region == $region->name) selected @endif>
+                                                                {{ $region->name }}</option>
                                                         @endforeach
                                                     </select>
-                                                    @error('up_color')
+                                                    @error('up_region')
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $message }}</strong>
                                                         </span>
@@ -360,7 +366,7 @@
                                         <div class="col-sm-2">
                                             <div class="form-group">
                                                 <label for="roles" class="form-label">Size/Weight *</label>
-                                                <select class="form-control" name="sizes[]">
+                                                <select class="form-control form-select" name="sizes[]">
                                                     <option value="">Select</option>
                                                     @foreach ($sizes as $size)
                                                         <option value="{{ $size->name }}">{{ $size->name }}
@@ -377,15 +383,15 @@
                                         <!--col end -->
                                         <div class="col-sm-2">
                                             <div class="form-group">
-                                                <label for="color" class="form-label">Color </label>
-                                                <select class="form-control" name="colors[]">
+                                                <label for="region" class="form-label">region </label>
+                                                <select class="form-control form-select" name="regions[]">
                                                     <option value="">Select</option>
-                                                    @foreach ($colors as $color)
-                                                        <option value="{{ $color->name }}">{{ $color->name }}
+                                                    @foreach ($regions as $region)
+                                                        <option value="{{ $region->name }}">{{ $region->name }}
                                                         </option>
                                                     @endforeach
                                                 </select>
-                                                @error('color')
+                                                @error('region')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
                                                     </span>
@@ -491,7 +497,7 @@
                                             <div class="col-sm-2">
                                                 <div class="form-group">
                                                     <label for="roles" class="form-label">Size/Weight</label>
-                                                    <select class="form-control" name="sizes[]">
+                                                    <select class="form-control form-select" name="sizes[]">
                                                         <option value="">Select</option>
                                                         @foreach ($sizes as $size)
                                                             <option value="{{ $size->name }}">{{ $size->name }}
@@ -508,15 +514,15 @@
                                             <!--col end -->
                                             <div class="col-sm-2">
                                                 <div class="form-group">
-                                                    <label for="color" class="form-label">Color </label>
-                                                    <select class="form-control " name="colors[]">
+                                                    <label for="region" class="form-label">Region </label>
+                                                    <select class="form-control form-select" name="regions[]">
                                                         <option value="">Select</option>
-                                                        @foreach ($colors as $color)
-                                                            <option value="{{ $color->name }}">
-                                                                {{ $color->name }}</option>
+                                                        @foreach ($regions as $region)
+                                                            <option value="{{ $region->name }}">
+                                                                {{ $region->name }}</option>
                                                         @endforeach
                                                     </select>
-                                                    @error('size')
+                                                    @error('region')
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $message }}</strong>
                                                         </span>
@@ -705,7 +711,7 @@
                             <div class="col-sm-4">
                                 <div class="form-group mb-3">
                                     <label for="stock_alert" class="form-label">Stock Alert </label>
-                                    <input type="text" class="form-control @error('stock_alert') is-invalid @enderror"
+                                    <input type="number" class="form-control @error('stock_alert') is-invalid @enderror"
                                         name="stock_alert" value="{{$edit_data->stock_alert}}" id="stock_alert" />
                                     @error('stock_alert')
                                         <span class="invalid-feedback" role="alert">

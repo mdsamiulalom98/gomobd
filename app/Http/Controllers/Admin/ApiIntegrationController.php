@@ -33,7 +33,7 @@ class ApiIntegrationController extends Controller
         $input['status'] = $request->status ? 1 : 0;
         $update_data->update($input);
 
-        Toastr::success('Success', 'Data update successfully');
+        Toastr::success('Data update successfully', 'Success', ['positionClass' => 'toast-top-right']);;
         return redirect()->back();
     }
 
@@ -54,7 +54,7 @@ class ApiIntegrationController extends Controller
         $input['password_g'] = $request->password_g ? 1 : 0;
         $update_data->update($input);
 
-        Toastr::success('Success', 'Data update successfully');
+        Toastr::success('Data update successfully', 'Success', ['positionClass' => 'toast-top-right']);;
         return redirect()->back();
     }
 
@@ -73,7 +73,7 @@ class ApiIntegrationController extends Controller
         $input['status'] = $request->status ? 1 : 0;
         $update_data->update($input);
 
-        Toastr::success('Success', 'Data update successfully');
+        Toastr::success('Data update successfully', 'Success', ['positionClass' => 'toast-top-right']);;
         return redirect()->back();
     }
 }

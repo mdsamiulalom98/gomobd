@@ -15,25 +15,20 @@ class ShoppingController extends Controller
     public function cart_store(Request $request)
     {
         // return $request->all();
-        $product = Product::select('id', 'name', 'slug', 'new_price', 'old_price', 'purchase_price', 'type', 'stock', 'category_id', 'seller_id')->where(['id' => $request->id])->first();
+        $product = Product::select('id', 'name', 'slug', 'new_price', 'old_price', 'purchase_price', 'stock', 'category_id', 'seller_id')->where(['id' => $request->id])->first();
         $var_product = ProductVariable::where(['product_id' => $request->id, 'region' => $request->product_region, 'size' => $request->product_size])->first();
-        if ($product->type == 0) {
-            $purchase_price = $var_product ? $var_product->purchase_price : 0;
-            $old_price = $var_product ? $var_product->old_price : 0;
-            $new_price = $var_product ? $var_product->new_price : 0;
-            $stock = $var_product ? $var_product->stock : 0;
-        } else {
-            $purchase_price = $product->purchase_price;
-            $old_price = $product->old_price;
-            $new_price = $product->new_price;
-            $stock = $product->stock;
-        }
+
+        $purchase_price = $var_product ? $var_product->purchase_price : 0;
+        $old_price = $var_product ? $var_product->old_price : 0;
+        $new_price = $var_product ? $var_product->new_price : 0;
+        $stock = $var_product ? $var_product->stock : 0;
+
 
         // Adjust $new_price if necessary here
         if ($new_price <= 0) {
             $new_price = $old_price > 0 ? $old_price : $purchase_price;
         }
-        if($request->enable_emi == 1) {
+        if ($request->enable_emi == 1) {
             // EMI calculations
             $emi_amount = (($new_price * 12) / 100) + (($new_price * 10) / 100) + $new_price;
             $down_payment = ($emi_amount * 35) / 100;
@@ -56,7 +51,7 @@ class ShoppingController extends Controller
         $hasEnabledEmi = $cartitems->contains(function ($cartItem) {
             return isset($cartItem->options['enable_emi']) && $cartItem->options['enable_emi'] == 1;
         });
-        if($hasEnabledEmi) {
+        if ($hasEnabledEmi) {
             Toastr::error('Some EMI product on cart. Please complete the current cart.', 'Error!');
             return back();
         }
@@ -68,20 +63,19 @@ class ShoppingController extends Controller
             'weight' => 1,
             'options' => [
                 'slug' => $product->slug,
-                'image' => $product->image->image,
-                'old_price' => $new_price,
+                'image' => $product->image->image ?? '',
+                'old_price' => round($new_price, 0),
                 'purchase_price' => $purchase_price,
                 'product_size' => $request->product_size,
                 'product_color' => $request->product_color,
                 'product_region' => $request->product_region,
-                'type' => $product->type,
                 'category_id' => $product->category_id,
                 'seller_id' => $product->seller_id,
-                'free_shipping' =>  0,
-                'enable_emi'=> $request->enable_emi,
-                'monthly_installment' => $monthly_installment ?? 0,
-                'emi_amount' => $emi_amount ?? 0,
-                'down_payment' => $down_payment ?? 0,
+                'free_shipping' => 0,
+                'enable_emi' => $request->enable_emi,
+                'monthly_installment' => round($monthly_installment, 0) ?? 0,
+                'emi_amount' => round($emi_amount, 0) ?? 0,
+                'down_payment' => round($down_payment, 0) ?? 0,
             ],
         ]);
 

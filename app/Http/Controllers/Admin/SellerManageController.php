@@ -90,7 +90,7 @@ class SellerManageController extends Controller
         $input['status'] = $request->status ? $request->status : 'inactive';
         $update_data->update($input);
 
-        Toastr::success('Success', 'Data update successfully');
+        Toastr::success('Data update successfully', 'Success', ['positionClass' => 'toast-top-right']);;
         return redirect()->back();
     }
 
@@ -110,7 +110,7 @@ class SellerManageController extends Controller
         Toastr::success('Success', 'Data active successfully');
         return redirect()->back();
     }
-    
+
 
     public function profile(Request $request)
     {
@@ -155,7 +155,7 @@ class SellerManageController extends Controller
         }
         return redirect()->back();
     }
-    
+
     public function products(Request $request)
     {
         $data = Product::where(['seller_id' => $request->id])->get();

@@ -174,7 +174,6 @@
                                 </div>
                             </div>
 
-
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label for="pro_barcode" class="form-label">Product Barcode </label>
@@ -182,23 +181,6 @@
                                         class="barcode form-control @error('stock') is-invalid @enderror"
                                         name="pro_barcode" value="{{ old('pro_barcode') }}" id="pro_barcode">
                                     @error('pro_barcode[]')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group mb-3">
-                                    <label for="type" class="form-label">Product Type</label>
-                                    <select class="form-control select2 @error('type') is-invalid @enderror" disabled
-                                        value="{{ old('type') }}" id="product_type" name="type">
-                                        <option value="1" @if ($edit_data->type == 1) selected @endif>Normal
-                                            Product</option>
-                                        <option value="0" @if ($edit_data->type == 0) selected @endif>Variable
-                                            Product</option>
-                                    </select>
-                                    @error('type')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
@@ -646,73 +628,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            @else
-                                <div class="normal_product">
-                                    <div class="row">
-                                        <div class="col-sm-3">
-                                            <div class="form-group mb-3">
-                                                <label for="purchase_price" class="form-label">Purchase Price *</label>
-                                                <input type="text"
-                                                    class="form-control purchase_price @error('purchase_price') is-invalid @enderror"
-                                                    name="purchase_price" value="{{ $edit_data->purchase_price }}"
-                                                    id="purchase_price" />
-                                                @error('purchase_price')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <!-- col-end -->
-                                        <!-- col-end -->
-                                        <div class="col-sm-3">
-                                            <div class="form-group mb-3">
-                                                <label for="old_price" class="form-label">Old Price</label>
-                                                <input type="text"
-                                                    class="form-control old_price @error('old_price') is-invalid @enderror"
-                                                    name="old_price" value="{{ $edit_data->old_price }}"
-                                                    id="old_price" />
-                                                @error('old_price')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <!-- col-end -->
-                                        <div class="col-sm-3">
-                                            <div class="form-group mb-3">
-                                                <label for="new_price" class="form-label">New Price *</label>
-                                                <input type="text"
-                                                    class="form-control new_price @error('new_price') is-invalid @enderror"
-                                                    name="new_price" value="{{ $edit_data->new_price }}"
-                                                    id="new_price" />
-                                                @error('new_price')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <!-- col-end -->
-
-                                        <div class="col-sm-3">
-                                            <div class="form-group mb-3">
-                                                <label for="stock" class="form-label">Stock *</label>
-                                                <input type="text"
-                                                    class="form-control @error('stock') is-invalid @enderror"
-                                                    name="stock" value="{{ $edit_data->stock }}" id="stock" />
-                                                @error('stock')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <!-- col-end -->
-                                    </div>
-                                </div>
-                                <!-- normal product end -->
                             @endif
                             <div class="col-sm-12 mb-3">
                                 <div class="form-group">
@@ -731,7 +646,7 @@
                             <div class="col-sm-4">
                                 <div class="form-group mb-3">
                                     <label for="stock_alert" class="form-label">Stock Alert </label>
-                                    <input type="text" class="form-control @error('stock_alert') is-invalid @enderror"
+                                    <input type="number" class="form-control @error('stock_alert') is-invalid @enderror"
                                         name="stock_alert" value="{{ $edit_data->stock_alert }}" id="stock_alert" />
                                     @error('stock_alert')
                                         <span class="invalid-feedback" role="alert">
@@ -858,9 +773,10 @@
             placeholder: "Enter Your Text Here",
         });
     </script>
-    
+
 
     <script>
+        /*
         $(document).ready(function() {
             $('#product_type').change(function() {
                 var id = $(this).val();
@@ -872,7 +788,7 @@
                     $('.normal_product').hide();
                 }
             });
-        });
+        }); */
     </script>
     <script>
         $(document).ready(function() {

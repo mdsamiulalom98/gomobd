@@ -14,13 +14,13 @@
     <meta name="twitter:description" content="{{ $details->meta_description }}" />
     <meta name="twitter:creator" content="{{ $generalsetting->name }}" />
     <meta property="og:url" content="{{ route('product', $details->slug) }}" />
-    <meta name="twitter:image" content="{{ asset($details->image->image) }}" />
+    <meta name="twitter:image" content="{{ asset($details->image->image ?? '') }}" />
 
     <!-- Open Graph data -->
     <meta property="og:title" content="{{ $details->name }}" />
     <meta property="og:type" content="product" />
     <meta property="og:url" content="{{ route('product', $details->slug) }}" />
-    <meta property="og:image" content="{{ asset($details->image->image) }}" />
+    <meta property="og:image" content="{{ asset($details->image->image ?? '') }}" />
     <meta property="og:description" content="{{ $details->meta_description }}" />
     <meta property="og:site_name" content="{{ $details->name }}" />
 @endpush
@@ -219,22 +219,19 @@
                                                     </label>
                                                     @php
                                                         $new_price = $details->new_price;
-                                                        $emi_amount =
-                                                            ($new_price * 12) / 100 +
-                                                            ($new_price * 10) / 100 +
-                                                            $new_price;
+                                                        $emi_amount = ($new_price * 12) / 100 + ($new_price * 10) / 100 + $new_price;
                                                         $down_payment = ($emi_amount * 35) / 100;
                                                         $monthly_installment = ($emi_amount - $down_payment) / 10;
                                                     @endphp
                                                     <label class="p-wrap emi">
                                                         <input type="radio" name="enable_emi" value="1">
                                                         <span
-                                                            class="price down_payment taka-sign-before">{{ $monthly_installment }}</span>
+                                                            class="price down_payment taka-sign-before">{{ round($monthly_installment, 0) }}</span>
                                                         <div class="p-tag regular">Down Payment: <span
-                                                                class="taka-sign-before emi_amount">{{ $down_payment }}</span>
+                                                                class="taka-sign-before emi_amount">{{ round($down_payment, 0) }}</span>
                                                         </div>
                                                         <div class="p-tag fade show"><span
-                                                                class="taka-sign-before monthly_installment">{{ $monthly_installment }}</span>
+                                                                class="taka-sign-before monthly_installment">{{ round($monthly_installment, 0) }}</span>
                                                             EMI for up to 10 Months***</div>
                                                     </label>
                                                 </div>
@@ -787,7 +784,7 @@
   "name":"{{$details->name}}",
   "description":"{!!$details->description!!}",
   "url":"{{Request::fullUrl()}}",
-  "image":"{{asset($details->image->image)}}",
+  "image":"{{asset($details->image->image ?? '')}}",
   "brand":"@if($details->brand_id !=NULL) {{$details->brand->brandName}} @endif",
   "offers": [
     {

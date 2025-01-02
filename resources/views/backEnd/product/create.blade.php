@@ -146,22 +146,7 @@
                             </div>
                             <!-- col end -->
 
-                            <div class="col-sm-4">
-                                <div class="form-group mb-3">
-                                    <label for="type" class="form-label">Product Type</label>
-                                    <select class="form-control select2 @error('type') is-invalid @enderror"
-                                        value="{{ old('type') }}" id="product_type" name="type">
-                                        <option value="1">Normal Product</option>
-                                        <option value="0">Variable Product</option>
-                                    </select>
-                                    @error('type')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                            </div>
-                            <!-- col-end -->
+                            
                             <div class="col-sm-4 mb-3">
                                 <div class="form-group">
                                     <label for="pro_barcode" class="form-label">Product Barcode </label>
@@ -538,7 +523,7 @@
                             <div class="col-sm-4">
                                 <div class="form-group mb-3">
                                     <label for="stock_alert" class="form-label">Stock Alert </label>
-                                    <input type="text" class="form-control @error('stock_alert') is-invalid @enderror"
+                                    <input type="number" class="form-control @error('stock_alert') is-invalid @enderror"
                                         name="stock_alert" value="{{ old('stock_alert') }}" id="stock_alert" />
                                     @error('stock_alert')
                                         <span class="invalid-feedback" role="alert">

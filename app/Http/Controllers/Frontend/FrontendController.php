@@ -322,9 +322,9 @@ class FrontendController extends Controller
         $response = [
             'status' => $status,
             'product' => $product,
-            'emi_amount' => $emi_amount,
-            'down_payment' => $down_payment,
-            'monthly_installment' => $monthly_installment
+            'emi_amount' => round($emi_amount, 0),
+            'down_payment' => round($down_payment, 0),
+            'monthly_installment' => round($monthly_installment, 0)
         ];
         return response()->json($response);
     }

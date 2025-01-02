@@ -7,8 +7,10 @@ use GuzzleHttp\Client;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Brian2694\Toastr\Facades\Toastr;
+use Gloudemans\Shoppingcart\Facades\Cart;
 use App\Models\Customer;
 use App\Models\OrderStatus;
 use App\Models\Order;
@@ -25,10 +27,7 @@ use App\Models\ExpenseCategories;
 use App\Models\ProductVariable;
 use App\Models\PurchaseDetails;
 use App\Models\District;
-use App\Models\Seller;
 use App\Models\EmiInstallment;
-use Illuminate\Support\Facades\DB;
-use Gloudemans\Shoppingcart\Facades\Cart;
 
 class OrderController extends Controller
 {
@@ -62,9 +61,8 @@ class OrderController extends Controller
                 $product_name = $product ? $product->name : $var_product->product->name;
                 $product_slug = $product ? $product->slug : $var_product->product->slug;
                 $product_image = $product ? $product->image->image : $var_product->image;
-                $product_type = $product ? $product->type : $var_product->product->type;
                 $product_size = $var_product->size ?? null;
-                $product_color = $var_product->color ?? null;
+                $product_region = $var_product->region ?? null;
 
                 $cartitem = Cart::instance('pos_shopping')->content()->where('id', $product_id)->first();
                 $cart_qty = $cartitem ? $cartitem->qty + $qty : $qty;
@@ -85,8 +83,7 @@ class OrderController extends Controller
                         'old_price' => $old_price,
                         'purchase_price' => $purchase_price,
                         'product_size' => $product_size,
-                        'product_color' => $product_color,
-                        'type' => $product_type
+                        'product_region' => $product_region,
                     ],
                 ]);
 
@@ -112,7 +109,6 @@ class OrderController extends Controller
             return view('backEnd.order.search', compact('products'));
         }
     }
-
 
     public function index($slug, Request $request)
     {
@@ -207,10 +203,6 @@ class OrderController extends Controller
         return view('backEnd.extraorder.index', compact('show_data', 'order_status', 'users', 'steadfast', 'pathaostore', 'pathaocities'));
     }
 
-
-
-
-
     public function pathaocity(Request $request)
     {
         $pathao_info = Courierapi::where(['status' => 1, 'type' => 'pathao'])->select('id', 'type', 'url', 'token', 'status')->first();
@@ -236,7 +228,6 @@ class OrderController extends Controller
 
     public function order_pathao(Request $request)
     {
-
         $order = Order::with('shipping')->find($request->id);
         $order_count = OrderDetails::select('order_id')->where('order_id', $order->id)->count();
         // pathao
@@ -292,10 +283,8 @@ class OrderController extends Controller
 
     public function order_process(Request $request)
     {
-
         $link = OrderStatus::find($request->status)->slug;
         $order = Order::find($request->id);
-        $order_status = $order->order_status;
         $order->order_status = $request->status;
         $order->admin_note = $request->admin_note;
         $order->save();
@@ -310,15 +299,9 @@ class OrderController extends Controller
         if ($request->status == 6) {
             $orders_details = OrderDetails::where('order_id', $order->id)->get();
             foreach ($orders_details as $order_detail) {
-                if ($order_detail->type == 1) {
-                    $product = Product::find($order_detail->product_id);
-                    $product->stock -= $order_detail->qty;
-                    $product->save();
-                } else {
-                    $product = ProductVariable::where(['product_id' => $order_detail->product_id, 'color' => $order_detail->product_color, 'size' => $order_detail->product_size])->first();
-                    $product->stock -= $order_detail->qty;
-                    $product->save();
-                }
+                $product = ProductVariable::where(['product_id' => $order_detail->product_id, 'region' => $order_detail->product_region, 'size' => $order_detail->product_size])->first();
+                $product->stock -= $order_detail->qty;
+                $product->save();
             }
         }
         Toastr::success('Success', 'Order status change successfully');
@@ -349,10 +332,10 @@ class OrderController extends Controller
 
     public function destroy(Request $request)
     {
-        $order = Order::where('id', $request->id)->delete();
-        $order_details = OrderDetails::where('order_id', $request->id)->delete();
-        $shipping = Shipping::where('order_id', $request->id)->delete();
-        $payment = Payment::where('order_id', $request->id)->delete();
+        Order::where('id', $request->id)->delete();
+        OrderDetails::where('order_id', $request->id)->delete();
+        Shipping::where('order_id', $request->id)->delete();
+        Payment::where('order_id', $request->id)->delete();
         Toastr::success('Success', 'Order delete success successfully');
         return redirect()->back();
     }
@@ -373,15 +356,9 @@ class OrderController extends Controller
             foreach ($orders as $order) {
                 $orders_details = OrderDetails::where('order_id', $order->id)->get();
                 foreach ($orders_details as $order_detail) {
-                    if ($order_detail->product_type == 1) {
-                        $product = Product::find($order_detail->product_id);
-                        $product->stock -= $order_detail->qty;
-                        $product->save();
-                    } else {
-                        $product = ProductVariable::where(['product_id' => $order_detail->product_id, 'color' => $order_detail->product_color, 'size' => $order_detail->product_size])->first();
-                        $product->stock -= $order_detail->qty;
-                        $product->save();
-                    }
+                    $product = ProductVariable::where(['product_id' => $order_detail->product_id, 'region' => $order_detail->product_region, 'size' => $order_detail->product_size])->first();
+                    $product->stock -= $order_detail->qty;
+                    $product->save();
                 }
             }
         }
@@ -446,7 +423,8 @@ class OrderController extends Controller
             }
         }
     }
-    public function order_create(){
+    public function order_create()
+    {
         $products = Product::select('id', 'name', 'new_price', 'type', 'status')->get();
         $cartinfo = Cart::instance('pos_shopping')->content();
         $shippingcharge = Shippingcharge::get();
@@ -458,26 +436,27 @@ class OrderController extends Controller
         return view('backEnd.order.create', compact('products', 'cartinfo', 'shippingcharge'));
     }
 
-    public function order_store(Request $request){
+    public function order_store(Request $request)
+    {
         // return $request->all();
-         if($request->guest_customer){
-            $this->validate($request,[
-            'guest_customer'=>'required',
+        if ($request->guest_customer) {
+            $this->validate($request, [
+                'guest_customer' => 'required',
             ]);
             $customer = Customer::find($request->guest_customer);
 
-            $area = ShippingCharge::where('pos',1)->first();
+            $area = ShippingCharge::where('pos', 1)->first();
             $name = $customer->name;
             $phone = $customer->phone;
             $address = $area->name;
             $area = $area->id;
 
-        }else{
-          $this->validate($request,[
-            'name'=>'required',
-            'phone'=>'required',
-            'address'=>'required',
-            'area'=>'required',
+        } else {
+            $this->validate($request, [
+                'name' => 'required',
+                'phone' => 'required',
+                'address' => 'required',
+                'area' => 'required',
             ]);
             $name = $request->name;
             $phone = $request->phone;
@@ -559,19 +538,16 @@ class OrderController extends Controller
             $order_details->sale_price = $cart->price;
             $order_details->product_color = $cart->options->product_color;
             $order_details->product_size = $cart->options->product_size;
-            $order_details->product_type = $cart->options->type;
+            $order_details->product_region = $cart->options->product_region;
+            $order_details->product_type = 0;
             $order_details->qty = $cart->qty;
             $order_details->save();
             // return  $order_details;
-            if ($order_details->product_type == 1) {
-                    $product = Product::find($order_details->product_id);
-                    $product->stock -= $order_details->qty;
-                    $product->save();
-                } else {
-                    $product = ProductVariable::where(['product_id' => $order_details->product_id, 'color' => $order_details->product_color, 'size' => $order_details->product_size])->first();
-                    $product->stock -= $order_details->qty;
-                    $product->save();
-                }
+
+            $product = ProductVariable::where(['product_id' => $order_details->product_id, 'region' => $order_details->product_region, 'size' => $order_details->product_size])->first();
+            $product->stock -= $order_details->qty;
+            $product->save();
+
         }
         Cart::instance('pos_shopping')->destroy();
         Session::forget('pos_shipping');
@@ -586,18 +562,13 @@ class OrderController extends Controller
     {
         $product = Product::select('id', 'name', 'slug', 'new_price', 'old_price', 'purchase_price', 'type', 'stock')->where(['id' => $request->id])->first();
 
-        $var_product = ProductVariable::where(['product_id' => $request->id, 'color' => $request->color, 'size' => $request->size])->first();
-        if ($product->type == 0) {
-            $purchase_price = $var_product ? $var_product->purchase_price : 0;
-            $old_price = $var_product ? $var_product->old_price : 0;
-            $new_price = $var_product ? $var_product->new_price : 0;
-            $stock = $var_product ? $var_product->stock : 0;
-        } else {
-            $purchase_price = $product->purchase_price;
-            $old_price = $product->old_price;
-            $new_price = $product->new_price;
-            $stock = $product->stock;
-        }
+        $var_product = ProductVariable::where(['product_id' => $request->id, 'region' => $request->region, 'size' => $request->size])->first();
+
+        $purchase_price = $var_product ? $var_product->purchase_price : 0;
+        $old_price = $var_product ? $var_product->old_price : 0;
+        $new_price = $var_product ? $var_product->new_price : 0;
+        $stock = $var_product ? $var_product->stock : 0;
+
 
         $qty = 1;
 
@@ -624,7 +595,7 @@ class OrderController extends Controller
                 'purchase_price' => $purchase_price,
                 'product_size' => $request->size,
                 'product_color' => $request->color,
-                'type' => $product->type
+                'product_region' => $request->region,
             ],
         ]);
         //  return Cart::instance('pos_shopping')->content();
@@ -681,7 +652,7 @@ class OrderController extends Controller
     }
     public function cart_shipping(Request $request)
     {
-        $shipping = ShippingCharge::where(['status'=>1,'id'=>$request->id])->first()->amount;
+        $shipping = ShippingCharge::where(['status' => 1, 'id' => $request->id])->first()->amount;
         Session::put('pos_shipping', $shipping);
         return response()->json($shipping);
     }
@@ -713,27 +684,29 @@ class OrderController extends Controller
                 'name' => $ordetails->product_name,
                 'qty' => $ordetails->qty,
                 'price' => $ordetails->sale_price,
-                'weight' => $ordetails->weight??1,
+                'weight' => $ordetails->weight ?? 1,
                 'options' => [
                     'image' => $ordetails->image->image,
                     'purchase_price' => $ordetails->purchase_price,
                     'product_discount' => $ordetails->product_discount,
                     'product_size' => $ordetails->product_size,
                     'product_color' => $ordetails->product_color,
+                    'product_region' => $ordetails->product_region,
                     'details_id' => $ordetails->id,
-                    'type' => $ordetails->product_type,
                 ],
             ]);
         }
         $cartinfo = Cart::instance('pos_shopping')->content();
         return view('backEnd.order.edit', compact('products', 'cartinfo', 'shippingcharge', 'shippinginfo', 'order', 'data'));
     }
-    public function order_installments($invoice_id) {
-        $order =  Order::where('invoice_id', $invoice_id)->first();
+    public function order_installments($invoice_id)
+    {
+        $order = Order::where('invoice_id', $invoice_id)->first();
         return view('backEnd.order.installments', compact('order'));
     }
 
-    public function order_installment_create($id) {
+    public function order_installment_create($id)
+    {
         $installment = EmiInstallment::find($id);
         return view('backEnd.order.installment_payment', compact('installment'));
     }
@@ -844,9 +817,10 @@ class OrderController extends Controller
         return redirect('admin/order/pending');
     }
 
-    public function purchase_report(){
+    public function purchase_report()
+    {
         $purchase = PurchaseDetails::with('product')->latest()->paginate(100);
-        return view('backEnd.reports.purchase',compact('purchase'));
+        return view('backEnd.reports.purchase', compact('purchase'));
     }
     public function order_report(Request $request)
     {
@@ -953,9 +927,9 @@ class OrderController extends Controller
 
     public function order_paid(Request $request)
     {
-        $customer = Customer::select('id','phone','due')->where('phone',$request->phone)->first();
-        if($customer){
-            Session::put('cdue',$customer->due);
+        $customer = Customer::select('id', 'phone', 'due')->where('phone', $request->phone)->first();
+        if ($customer) {
+            Session::put('cdue', $customer->due);
         }
         $amount = $request->amount;
         Session::put('cpaid', $amount);

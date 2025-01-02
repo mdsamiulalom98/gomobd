@@ -55,7 +55,7 @@ class ColorController extends Controller
         $input = $request->all();
         $update_data->update($input);
 
-        Toastr::success('Success', 'Data update successfully');
+        Toastr::success('Data update successfully', 'Success', ['positionClass' => 'toast-top-right']);;
         return redirect()->route('colors.index');
     }
 

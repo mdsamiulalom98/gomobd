@@ -208,7 +208,6 @@ class ProductController extends Controller
         return redirect()->route('products.index');
     }
 
-
     public function edit($id)
     {
         $edit_data = Product::with('images')->find($id);
@@ -235,7 +234,6 @@ class ProductController extends Controller
         $update_data = Product::find($request->id);
         $input = $request->except(['image', 'product_type', 'files', 'sizes', 'regions', 'purchase_prices', 'old_prices', 'new_prices', 'stocks', 'images', 'up_id', 'up_sizes', 'up_regions', 'up_purchase_prices', 'up_old_prices', 'up_new_prices', 'up_stocks', 'up_images', 'pro_barcodes', 'up_pro_barcodes', 'proColor']);
 
-        $last_id = Product::orderBy('id', 'desc')->select('id')->first();
         $input['slug'] = strtolower(preg_replace('/[\/\s]+/', '-', $request->name . '-' . $update_data->id));
         $input['status'] = $request->status ? 1 : 0;
         $input['topsale'] = $request->topsale ? 1 : 0;
@@ -299,7 +297,6 @@ class ProductController extends Controller
             }
         }
 
-
         if ($request->stocks) {
             $size       = $request->sizes;
             $region      = $request->regions;
@@ -337,7 +334,7 @@ class ProductController extends Controller
             }
         }
 
-        Toastr::success('Success', 'Data update successfully');
+        Toastr::success('Data update successfully', 'Success', ['positionClass' => 'toast-top-right']);;
         return redirect()->route('products.index');
     }
 
@@ -392,22 +389,22 @@ class ProductController extends Controller
     }
     public function update_deals(Request $request)
     {
-        $products = Product::whereIn('id', $request->input('product_ids'))->update(['topsale' => $request->status]);
+        Product::whereIn('id', $request->input('product_ids'))->update(['topsale' => $request->status]);
         return response()->json(['status' => 'success', 'message' => 'Hot deals product status change']);
     }
     public function update_feature(Request $request)
     {
-        $products = Product::whereIn('id', $request->input('product_ids'))->update(['feature_product' => $request->status]);
+        Product::whereIn('id', $request->input('product_ids'))->update(['feature_product' => $request->status]);
         return response()->json(['status' => 'success', 'message' => 'Feature product status change']);
     }
     public function update_status(Request $request)
     {
-        $products = Product::whereIn('id', $request->input('product_ids'))->update(['status' => $request->status]);
+        Product::whereIn('id', $request->input('product_ids'))->update(['status' => $request->status]);
         return response()->json(['status' => 'success', 'message' => 'Product status change successfully']);
     }
     public function barcode_update(Request $request)
     {
-        $products = ProductVariable::whereIn('id', $request->input('product_ids'))->update(['status' => $request->status]);
+        ProductVariable::whereIn('id', $request->input('product_ids'))->update(['status' => $request->status]);
         Toastr::success('Success', 'Data delete successfully');
         return redirect()->back();
     }

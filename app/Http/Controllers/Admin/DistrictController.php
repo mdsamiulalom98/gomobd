@@ -40,7 +40,7 @@ class DistrictController extends Controller
         $update_data = District::find($request->id);
         $input = $request->all();
         $update_data->update($input);
-        Toastr::success('Success', 'Data update successfully');
+        Toastr::success('Data update successfully', 'Success', ['positionClass' => 'toast-top-right']);;
         return redirect()->route('districts.index');
     }
 
@@ -52,7 +52,7 @@ class DistrictController extends Controller
         $update_data = District::where('district', $request->district)->update([
             'shippingfee' => $request->shippingfee
         ]);
-        Toastr::success('Success', 'Data update successfully');
+        Toastr::success('Data update successfully', 'Success', ['positionClass' => 'toast-top-right']);;
         return redirect()->route('districts.index');
     }
 }
