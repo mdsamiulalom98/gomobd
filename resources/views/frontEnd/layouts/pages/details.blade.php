@@ -113,8 +113,10 @@
                                             @else
                                                 <p class="details-price">
                                                     @if ($details->old_price)
-                                                        <del>৳{{ $details->old_price }}</del>
-                                                    @endif ৳{{ $details->new_price }}
+                                                        <del>৳ <span
+                                                                class="old_price">{{ $details->old_price }}</span></del>
+                                                    @endif ৳ <span
+                                                        class="new_price">{{ $details->new_price }}</span>
                                                 </p>
                                             @endif
                                             <form action="{{ route('cart.store') }}" method="POST" name="formName">
@@ -163,7 +165,7 @@
                                                                                 id="f-option{{ $prosize->size }}"
                                                                                 value="{{ $prosize->size }}"
                                                                                 name="product_size"
-                                                                                class="selector-item_radio emptyalert stock_size"
+                                                                                class="selector-item_radio emptyalert stock_size stock_check"
                                                                                 data-size="{{ $prosize->size }}"
                                                                                 required />
                                                                             <label for="f-option{{ $prosize->size }}"
@@ -265,6 +267,7 @@
                                                         </a>
                                                     </h4>
                                                 </div>
+                                                {{--
                                                 <div class="mt-3">
                                                     <div class="del_charge_area">
                                                         <table class="table table-bordered">
@@ -279,6 +282,7 @@
                                                         </table>
                                                     </div>
                                                 </div>
+                                                --}}
                                             </form>
                                         </div>
                                     </div>
@@ -298,11 +302,11 @@
                     <div class="details-tab">
                         <ul class="nav nav-tabs" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="video-tab" data-bs-toggle="tab"
+                                <button class="nav-link active" id="video-tab" data-bs-toggle="tab"
                                     data-bs-target="#video-tab-pane" type="button" role="tab">Video</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="description-tab" data-bs-toggle="tab"
+                                <button class="nav-link " id="description-tab" data-bs-toggle="tab"
                                     data-bs-target="#description-tab-pane" type="button"
                                     role="tab">Description</button>
                             </li>
@@ -317,7 +321,7 @@
                             </li>
                         </ul>
                         <div class="tab-content">
-                            <div class="tab-pane fade show active" id="description-tab-pane" role="tabpanel"
+                            <div class="tab-pane fade " id="description-tab-pane" role="tabpanel"
                                 aria-labelledby="description-tab" tabindex="0">
                                 <div class="description">
                                     {!! $details->description !!}
@@ -480,7 +484,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="video-tab-pane" role="tabpanel" aria-labelledby="video-tab"
+                            <div class="tab-pane fade show active" id="video-tab-pane" role="tabpanel" aria-labelledby="video-tab"
                                 tabindex="0">
                                 <div class="pro_vide">
                                     <iframe width="100%" height="315"
@@ -732,6 +736,14 @@
         @if ($details->type == 1)
             $(".stock").html('<p><span>Stock : </span>' + {{ $details->stock }} + '</p>');
         @endif
+        $(document).on('click', '.stock_size', function () {
+            // Uncheck all inputs with the class `size_input`
+            // $('.stock_check').prop('checked', false);
+
+            // Optionally, check the input corresponding to the button's value
+            // const value = $(this).val();
+            // $('.size_input[value="' + value + '"]').prop('checked', true);
+        });
         $(".stock_check").on("click", function() {
             var region = $(".stock_region:checked").data('region');
             var size = $(".stock_size:checked").data('size');
@@ -749,6 +761,7 @@
                     dataType: "json",
                     success: function(response) {
                         if (response.status) {
+                            console.log('true' + response.status);
                             $(".stock").html('<p><span>Stock : </span>' + response.product.stock +
                                 '</p>');
 
@@ -761,14 +774,18 @@
                             $('.add_cart_btn').prop('disabled', false);
                             $('.order_now_btn').prop('disabled', false);
                         } else {
+                            console.log('false: ' + response.status);
                             toastr.warning("Please select another region or size");
+                            $(".old_price").text('0');
+                            $(".new_price").text('0');
+                            $(".emi_amount").text('0');
+                            $(".down_payment").text('0');
+                            $(".monthly_installment").text('0');
                             $(".stock").empty();
                             // cart button disabled
                             $('.add_cart_btn').prop('disabled', true);
                             $('.order_now_btn').prop('disabled', true);
                         }
-
-
                     }
                 });
             }

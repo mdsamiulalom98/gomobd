@@ -174,22 +174,8 @@
                                 </div>
                             </div>
 
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label for="pro_barcode" class="form-label">Product Barcode </label>
-                                    <input type="text"
-                                        class="barcode form-control @error('stock') is-invalid @enderror"
-                                        name="pro_barcode" value="{{ old('pro_barcode') }}" id="pro_barcode">
-                                    @error('pro_barcode[]')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                            </div>
-
                             <!-- col-end -->
-                            <div class="col-sm-12 mb-4">
+                            <div class="col-sm-8 mb-4">
                                 <div class="form-group color-container">
                                     <label for="proColor" class="form-label">Color </label>
                                     <select class="form-control select2" name="proColor[]" multiple="multiple">
@@ -210,7 +196,7 @@
                             </div>
                             <!--col end -->
 
-                            @if ($edit_data->type == 0)
+
                                 <div class="variable_product">
                                     <!-- variable edit part -->
                                     @foreach ($variables as $variable)
@@ -628,7 +614,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            @endif
                             <div class="col-sm-12 mb-3">
                                 <div class="form-group">
                                     <label for="description" class="form-label">Description *</label>
@@ -776,19 +761,7 @@
 
 
     <script>
-        /*
-        $(document).ready(function() {
-            $('#product_type').change(function() {
-                var id = $(this).val();
-                if (id == 1) {
-                    $('.normal_product').show();
-                    $('.variable_product').hide();
-                } else {
-                    $('.variable_product').show();
-                    $('.normal_product').hide();
-                }
-            });
-        }); */
+
     </script>
     <script>
         $(document).ready(function() {

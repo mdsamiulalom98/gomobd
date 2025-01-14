@@ -146,21 +146,7 @@
                             </div>
                             <!-- col end -->
 
-                            
-                            <div class="col-sm-4 mb-3">
-                                <div class="form-group">
-                                    <label for="pro_barcode" class="form-label">Product Barcode </label>
-                                    <input type="text"
-                                        class="barcode form-control @error('stock') is-invalid @enderror"
-                                        name="pro_barcode" value="{{ old('pro_barcode') }}" id="pro_barcode">
-                                    @error('pro_barcode[]')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-sm-12 mb-4">
+                            <div class="col-sm-8 mb-4">
                                 <div class="form-group color-container">
                                     <label for="proColor" class="form-label">Color </label>
                                     <select class="form-control select2" name="proColor[]"
@@ -178,71 +164,8 @@
                                 </div>
                             </div>
                             <!--col end -->
-                            <div class="normal_product">
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <div class="form-group mb-3">
-                                            <label for="purchase_price" class="form-label">Purchase Price *</label>
-                                            <input type="text"
-                                                class="nrequired form-control @error('purchase_price') is-invalid @enderror"
-                                                name="purchase_price" value="{{ old('purchase_price') }}"
-                                                id="purchase_price" />
-                                            @error('purchase_price')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <!-- col-end -->
-                                    <!-- col-end -->
-                                    <div class="col-sm-3">
-                                        <div class="form-group mb-3">
-                                            <label for="old_price" class="form-label">Old Price</label>
-                                            <input type="text"
-                                                class="form-control @error('old_price') is-invalid @enderror"
-                                                name="old_price" value="{{ old('old_price') }}" id="old_price" />
-                                            @error('old_price')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <!-- col-end -->
-                                    <div class="col-sm-3">
-                                        <div class="form-group mb-3">
-                                            <label for="new_price" class="form-label">New Price *</label>
-                                            <input type="text"
-                                                class="nrequired form-control @error('new_price') is-invalid @enderror"
-                                                name="new_price" value="{{ old('new_price') }}" id="new_price" />
-                                            @error('new_price')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <!-- col-end -->
 
-                                    <div class="col-sm-3">
-                                        <div class="form-group mb-3">
-                                            <label for="stock" class="form-label">Stock *</label>
-                                            <input type="text"
-                                                class="nrequired form-control @error('stock') is-invalid @enderror"
-                                                name="stock" value="{{ old('stock') }}" id="stock" />
-                                            @error('stock')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <!-- col-end -->
-                                </div>
-                            </div>
-                            <!-- normal product end -->
-                            <div class="variable_product" style="display:none">
+                            <div class="variable_product" >
                                 <div class="row">
 
                                     <div class="col-sm-2">
@@ -633,7 +556,8 @@
             <!-- end col-->
         </div>
     </div>
-    @endsection @section('script')
+    @endsection
+    @section('script')
     <script src="{{ asset('public/backEnd/') }}/assets/libs/parsleyjs/parsley.min.js"></script>
     <script src="{{ asset('public/backEnd/') }}/assets/js/pages/form-validation.init.js"></script>
     <script src="{{ asset('public/backEnd/') }}/assets/libs/select2/js/select2.min.js"></script>
@@ -648,20 +572,7 @@
     <script>
         $(document).ready(function() {
             $('.nrequired').attr('required', true);
-            $('#product_type').change(function() {
-                var id = $(this).val();
-                if (id == 1) {
-                    $('.nrequired').attr('required', true);
-                    $('.barcode').removeAttr('disabled');
-                    $('.normal_product').show();
-                    $('.variable_product').hide();
-                } else {
-                    $('.nrequired').removeAttr('required');
-                    $('.barcode').attr('disabled', true);
-                    $('.variable_product').show();
-                    $('.normal_product').hide();
-                }
-            });
+
         });
     </script>
     <script>

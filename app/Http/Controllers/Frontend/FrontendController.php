@@ -310,14 +310,26 @@ class FrontendController extends Controller
     }
     public function stock_check(Request $request)
     {
-        $product = ProductVariable::where(['product_id' => $request->id, 'region' => $request->region, 'size' => $request->size])->first();
+        $product = ProductVariable::where(['product_id' => $request->id, 'region' => $request->region, 'size' => $request->size])->select('id', 'product_id', 'old_price', 'new_price', 'stock')->first();
 
         $status = $product ? true : false;
 
-        $new_price = $product->new_price;
-        $emi_amount = (($new_price * 12) / 100) + (($new_price * 10) / 100) + $new_price;
-        $down_payment = ($emi_amount * 35) / 100;
-        $monthly_installment = ($emi_amount - $down_payment) / 10;
+        // $new_price = $product->new_price ?? 0;
+        // $emi_amount = (($new_price * 12) / 100) + (($new_price * 10) / 100) + $new_price;
+        // $down_payment = ($emi_amount * 35) / 100;
+        // $monthly_installment = ($emi_amount - $down_payment) / 10;
+
+        if ($status) {
+            $new_price = $product->new_price ?? 0;
+            $emi_amount = (($new_price * 12) / 100) + (($new_price * 10) / 100) + $new_price;
+            $down_payment = ($emi_amount * 35) / 100;
+            $monthly_installment = ($emi_amount - $down_payment) / 10;
+        } else {
+            $new_price = 0;
+            $emi_amount = 0;
+            $down_payment = 0;
+            $monthly_installment = 0;
+        }
 
         $response = [
             'status' => $status,
