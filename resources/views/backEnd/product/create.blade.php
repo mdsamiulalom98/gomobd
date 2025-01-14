@@ -131,25 +131,10 @@
                                 </div>
                             </div>
                             <!-- col end -->
-
-                            <div class="col-sm-4 mb-3">
-                                <label for="image">Product Image (ctrl to multiple) *</label>
-                                <div class="input-group control-group">
-                                    <input type="file" name="image[]" multiple
-                                        class="form-control @error('image') is-invalid @enderror" />
-                                    @error('image')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                            </div>
-                            <!-- col end -->
-
                             <div class="col-sm-8 mb-4">
                                 <div class="form-group color-container">
                                     <label for="proColor" class="form-label">Color </label>
-                                    <select class="form-control select2" name="proColor[]"
+                                    <select class="form-control select2" name="proColor[]" id="proColor"
                                         multiple="multiple">
                                         <option value="">Select</option>
                                         @foreach ($colors as $color)
@@ -164,6 +149,27 @@
                                 </div>
                             </div>
                             <!--col end -->
+
+                            <div class="col-sm-4 mb-3">
+                                <label for="image">Product Image *</label>
+                                <div class="image-block">
+                                </div>
+                            </div>
+                            <!-- col end -->
+                            <template id="blockTemplate">
+                                <div class="input-group control-group increment">
+                                    <input type="file" name="image[]"
+                                        class="form-control @error('image') is-invalid @enderror" />
+                                        <button class="remove-btn btn btn-danger">
+                                            <i class="fe-x-circle"></i>
+                                        </button>
+                                    @error('image')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </template>
 
                             <div class="variable_product" >
                                 <div class="row">
@@ -206,7 +212,7 @@
 
                                     <div class="col-sm-2">
                                         <div class="form-group">
-                                            <label for="purchase_prices" class="form-label">Purchase Price *</label>
+                                            <label for="purchase_prices" class="form-label">Purchase Price</label>
                                             <input type="text"
                                                 class="form-control @error('purchase_prices') is-invalid @enderror"
                                                 name="purchase_prices[]" value="{{ old('purchase_prices') }}"
@@ -258,36 +264,7 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <label for="images">Color Image </label>
-                                            <div class="input-group control-group">
-                                                <input type="file" name="images[]"
-                                                    class="form-control @error('images') is-invalid @enderror" />
-                                                <div class="input-group-btn">
-                                                </div>
-                                                @error('images[]')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <label for="pro_barcodes" class="form-label">Product Barcode </label>
-                                            <input type="text"
-                                                class="form-control @error('stock') is-invalid @enderror"
-                                                name="pro_barcodes[]" value="{{ old('pro_barcodes') }}"
-                                                id="pro_barcodes">
-                                            @error('pro_barcodes[]')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-                                    </div>
+
                                     <!-- col end -->
                                     <div class="input-group-btn mt-3">
                                         <button class="btn btn-success increment_btn  btn-xs text-white" type="button"><i
@@ -334,7 +311,7 @@
 
                                         <div class="col-sm-2">
                                             <div class="form-group">
-                                                <label for="purchase_prices" class="form-label">Purchase Price *</label>
+                                                <label for="purchase_prices" class="form-label">Purchase Price</label>
                                                 <input type="text"
                                                     class="form-control @error('purchase_prices') is-invalid @enderror"
                                                     name="purchase_prices[]" value="{{ old('purchase_prices') }}"
@@ -390,36 +367,7 @@
                                                 @enderror
                                             </div>
                                         </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label for="images">Color Image </label>
-                                                <div class="input-group control-group">
-                                                    <input type="file" name="images[]"
-                                                        class="form-control @error('images') is-invalid @enderror" />
-                                                    <div class="input-group-btn">
-                                                    </div>
-                                                    @error('images[]')
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label for="pro_barcodes" class="form-label">Product Barcode </label>
-                                                <input type="text"
-                                                    class="form-control @error('stock') is-invalid @enderror"
-                                                    name="pro_barcodes[]" value="{{ old('pro_barcodes') }}"
-                                                    id="pro_barcodes">
-                                                @error('pro_barcodes[]')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror
-                                            </div>
-                                        </div>
+
                                         <!-- col end -->
                                         <div class="input-group-btn mt-3">
                                             <button class="btn btn-danger remove_btn  btn-xs text-white" type="button"><i
@@ -642,6 +590,36 @@
             } else {
                 $("#childcategory_id").empty();
             }
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#proColor').on('change', function() {
+                const selectedItems = $(this).val(); // Get all selected items
+                const $clonedBlocksContainer = $('.image-block'); // Container for cloned blocks
+
+                // Loop through selected items and add only new blocks
+                if (selectedItems) {
+                    selectedItems.forEach(function(item) {
+                        // Check if the block for this item already exists
+                        if ($(`.increment[data-id="${item}"]`).length === 0) {
+                            const $template = $('#blockTemplate').html(); // Get the template
+                            const $clonedBlock = $($template); // Clone it
+
+                            // Set a unique identifier (data-id) for the block
+                            $clonedBlock.attr('data-id', item);
+
+                            // Append the block to the container
+                            $clonedBlocksContainer.append($clonedBlock);
+                        }
+                    });
+                }
+            });
+
+            // Event delegation for the remove button
+            $(document).on('click', '.remove-btn', function() {
+                $(this).closest('.increment').remove(); // Remove the specific block
+            });
         });
     </script>
 @endsection

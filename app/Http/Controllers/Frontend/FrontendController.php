@@ -251,7 +251,6 @@ class FrontendController extends Controller
             ->with('image', 'images', 'category', 'subcategory', 'childcategory')
             ->withCount('variableimages')
             ->firstOrFail();
-
         $products = Product::where(['category_id' => $details->category_id, 'status' => 1])
             ->with('image')
             ->select('id', 'name', 'slug', 'status', 'approval', 'status', 'category_id', 'new_price', 'old_price', 'type')
@@ -278,7 +277,11 @@ class FrontendController extends Controller
             ->distinct()
             ->get();
         $seller_info = Seller::find($details->seller_id);
-        return view('frontEnd.layouts.pages.details', compact('details', 'products', 'shippingcharge', 'productcolors', 'productsizes', 'reviews', 'seller_info', 'productregions'));
+        $imagesArray = $details->images->toArray();
+        // $variablesArray = $details->variableimages->toArray();
+        $sliderimages = array_merge($imagesArray);
+        // return $sliderimages->count();
+        return view('frontEnd.layouts.pages.details', compact('details', 'products', 'shippingcharge', 'productcolors', 'productsizes', 'reviews', 'seller_info', 'productregions', 'sliderimages'));
     }
 
     public function seller_shop(Request $request)

@@ -98,7 +98,7 @@ body.authentication-bg {
     background: #fff;
 }
 .navbar-custom .topnav-menu .nav-link {
-    color: #222;x
+    color: #222;
 }
 .nav-user img {
     height: 42px;
@@ -418,5 +418,9 @@ footer{
     }
     .action2-btn a, .action2-btn button {
         padding: 3px 12px;
+    }
+
+    .navbar-custom, .content-page {
+        margin-left: 0px;
     }
 }

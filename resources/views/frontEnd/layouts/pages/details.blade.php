@@ -39,8 +39,8 @@
                                             <p> @php $discount=(((($details->old_price)-($details->new_price))*100) / ($details->old_price)) @endphp {{ number_format($discount, 0) }}% Discount</p>
                                         </div>
                                     @endif
-                                    @if ($details->variableimages->count() > 0)
-                                        <div class="details_slider owl-carousel">
+                                    {{-- @if ($details->variableimages->count() > 0) --}}
+                                        {{-- <div class="details_slider owl-carousel">
                                             @foreach ($details->variableimages as $value)
                                                 <div class="dimage_item">
                                                     <img src="{{ asset($value->image) }}" class="block__pic" />
@@ -55,26 +55,26 @@
                                                     <img src="{{ asset($value->image) }}" />
                                                 </div>
                                             @endforeach
-                                        </div>
+                                        </div> --}}
 
                                         <!-- normal product image -->
-                                    @else
+                                    {{-- @else --}}
                                         <div class="details_slider owl-carousel">
-                                            @foreach ($details->images as $value)
+                                            @foreach ($sliderimages as $key => $value)
                                                 <div class="dimage_item">
-                                                    <img src="{{ asset($value->image) }}" class="block__pic" />
+                                                    <img src="{{ asset($value['image'] ?? '') }}" class="block__pic" />
                                                 </div>
                                             @endforeach
                                         </div>
                                         <div
-                                            class="indicator_thumb @if ($details->images->count() > 4) thumb_slider owl-carousel @endif">
-                                            @foreach ($details->images as $key => $value)
+                                            class="indicator_thumb @if ($sliderimages > 4) thumb_slider owl-carousel @endif">
+                                            @foreach ($sliderimages as $key => $value)
                                                 <div class="indicator-item" data-id="{{ $key }}">
-                                                    <img src="{{ asset($value->image) }}" />
+                                                    <img src="{{ asset($value['image'] ?? '') }}" />
                                                 </div>
                                             @endforeach
                                         </div>
-                                    @endif
+                                    {{-- @endif --}}
                                 </div>
                             </div>
                             <div class="col-sm-6">

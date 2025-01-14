@@ -84,7 +84,7 @@ class ProductController extends Controller
         }
         // return $data;
 
-        if ($request->product_id  && $request->type == 1) {
+        if ($request->product_id && $request->type == 1) {
             $barcode = Product::select('id', 'name', 'slug', 'status', 'pro_barcode', 'new_price', 'type')->where('id', $request->product_id)->first();
             $product = $barcode;
         } elseif ($request->product_id && $request->type == 0) {
@@ -127,9 +127,9 @@ class ProductController extends Controller
             $input['purchase_price'] = $request->purchase_prices[0];
             $input['old_price'] = $request->old_prices[0];
             $input['new_price'] = $request->new_prices[0];
-            $input['stock']     = 0;
+            $input['stock'] = 0;
         } else {
-            $input['pro_barcode'] = $request->pro_barcode ?? $this->barcode_generate();
+            $input['pro_barcode'] = $this->barcode_generate();
         }
         $save_data = Product::create($input);
         $save_data->colors()->attach($request->proColor);
@@ -137,39 +137,26 @@ class ProductController extends Controller
         $pro_image = $request->file('image');
         if ($pro_image) {
             foreach ($pro_image as $key => $image) {
-                $name =  time() . '-' . $image->getClientOriginalName();
+                $name = time() . '-' . $image->getClientOriginalName();
                 $name = strtolower(preg_replace('/\s+/', '-', $name));
                 $uploadPath = 'public/uploads/product/';
                 $image->move($uploadPath, $name);
                 $imageUrl = $uploadPath . $name;
-                $pimage             = new Productimage();
+                $pimage = new Productimage();
                 $pimage->product_id = $save_data->id;
-                $pimage->image      = $imageUrl;
+                $pimage->image = $imageUrl;
                 $pimage->save();
             }
         }
         if ($request->stocks) {
-            $size       = $request->sizes;
-            $region      = $request->regions;
-            $stocks     = array_filter($request->stocks);
-            $purchase   = $request->purchase_prices;
-            $old_price  = $request->old_prices;
-            $new_price  = $request->new_prices;
-            $pro_barcode = $request->pro_barcodes;
-            $images     = $request->file('images');
+            $size = $request->sizes;
+            $region = $request->regions;
+            $stocks = array_filter($request->stocks);
+            $purchase = $request->purchase_prices;
+            $old_price = $request->old_prices;
+            $new_price = $request->new_prices;
             if (is_array($stocks)) {
                 foreach ($stocks as $key => $stock) {
-                    $imageUrl = null;
-
-                    if (isset($images[$key]) && $images[$key] != null) {
-                        $image = $images[$key];
-                        $name = time() . '-' . $image->getClientOriginalName();
-                        $name = strtolower(preg_replace('/\s+/', '-', $name));
-                        $uploadPath = 'public/uploads/product/';
-                        $image->move($uploadPath, $name);
-                        $imageUrl = $uploadPath . $name;
-                    }
-
                     $variable = new ProductVariable();
                     $variable->product_id = $save_data->id;
                     $variable->size = isset($size[$key]) ? $size[$key] : null;
@@ -177,30 +164,29 @@ class ProductController extends Controller
                     $variable->purchase_price = isset($purchase[$key]) ? $purchase[$key] : reset($purchase);
                     $variable->old_price = isset($old_price[$key]) ? $old_price[$key] : reset($old_price);
                     $variable->new_price = isset($new_price[$key]) ? $new_price[$key] : reset($new_price);
-                    $variable->pro_barcode = $pro_barcode[$key] ?? $this->barcode_generate();
+                    $variable->pro_barcode = $this->barcode_generate();
                     $variable->stock = $stock;
-                    $variable->image = $imageUrl;
                     $variable->save();
 
-                    $parchase_var                   = new PurchaseDetails();
-                    $parchase_var->product_id       = $save_data->id;
-                    $parchase_var->region           = $variable->region;
-                    $parchase_var->size             = $variable->size;
-                    $parchase_var->purchase_price   = $variable->purchase_price;
-                    $parchase_var->old_price        = $variable->old_price;
-                    $parchase_var->new_price        = $variable->new_price;
-                    $parchase_var->stock            = $variable->stock;
+                    $parchase_var = new PurchaseDetails();
+                    $parchase_var->product_id = $save_data->id;
+                    $parchase_var->region = $variable->region;
+                    $parchase_var->size = $variable->size;
+                    $parchase_var->purchase_price = $variable->purchase_price;
+                    $parchase_var->old_price = $variable->old_price;
+                    $parchase_var->new_price = $variable->new_price;
+                    $parchase_var->stock = $variable->stock;
                     $parchase_var->save();
                 }
             }
         }
         if ($request->type == 1) {
-            $parchase                   = new PurchaseDetails();
-            $parchase->product_id       = 1;
-            $parchase->purchase_price   = $request->purchase_price;
-            $parchase->old_price        = $request->old_price;
-            $parchase->new_price        = $request->new_price;
-            $parchase->stock            = $request->stock;
+            $parchase = new PurchaseDetails();
+            $parchase->product_id = 1;
+            $parchase->purchase_price = $request->purchase_price;
+            $parchase->old_price = $request->old_price;
+            $parchase->new_price = $request->new_price;
+            $parchase->stock = $request->stock;
             $parchase->save();
         }
 
@@ -219,8 +205,11 @@ class ProductController extends Controller
         $sizes = Size::where('status', '1')->get();
         $regions = Region::where('status', 1)->get();
         $variables = ProductVariable::where('product_id', $id)->get();
-        $selectcolors = Productcolor::where('product_id',$id)->get();
-        return view('backEnd.product.edit', compact('edit_data', 'categories', 'subcategory', 'childcategory', 'brands', 'sizes', 'regions', 'colors', 'variables', 'selectcolors'));
+        $selectcolors = Productcolor::where('product_id', $id)->get();
+        $colorCount = $selectcolors->count();
+        $imageCount = $edit_data->images->count();
+        $blankInputCount = max(0, $colorCount - $imageCount);
+        return view('backEnd.product.edit', compact('edit_data', 'categories', 'subcategory', 'childcategory', 'brands', 'sizes', 'regions', 'colors', 'variables', 'selectcolors', 'blankInputCount'));
     }
 
     public function update(Request $request)
@@ -244,73 +233,59 @@ class ProductController extends Controller
         $images = $request->file('image');
         if ($images) {
             foreach ($images as $key => $image) {
-                $name =  time() . '-' . $image->getClientOriginalName();
+                $name = time() . '-' . $image->getClientOriginalName();
                 $name = strtolower(preg_replace('/\s+/', '-', $name));
                 $uploadPath = 'public/uploads/product/';
                 $image->move($uploadPath, $name);
                 $imageUrl = $uploadPath . $name;
 
-                $pimage             = new Productimage();
+                $pimage = new Productimage();
                 $pimage->product_id = $update_data->id;
-                $pimage->image      = $imageUrl;
+                $pimage->image = $imageUrl;
                 $pimage->save();
             }
         }
 
         if ($request->up_id) {
             $update_ids = array_filter($request->up_id);
-            $up_region   = $request->up_regions;
-            $up_size    = $request->up_sizes;
-            $up_size    = $request->up_sizes;
-            $up_stock   = $request->up_stocks;
-            $up_purchase     = $request->up_purchase_prices;
-            $up_old_price    = $request->up_old_prices;
-            $up_new_price    = $request->up_new_prices;
-            $up_pro_barcode    = $request->up_pro_barcodes;
-            $images     = $request->file('up_images');
+            $up_region = $request->up_regions;
+            $up_size = $request->up_sizes;
+            $up_size = $request->up_sizes;
+            $up_stock = $request->up_stocks;
+            $up_purchase = $request->up_purchase_prices;
+            $up_old_price = $request->up_old_prices;
+            $up_new_price = $request->up_new_prices;
+
             if ($update_ids) {
                 foreach ($update_ids as $key => $update_id) {
-                    $upvariable =  ProductVariable::find($update_id);
-                    if (isset($images[$key])) {
-                        $image = $images[$key];
-                        $name  =  time() . '-' . $image->getClientOriginalName();
-                        $name  = strtolower(preg_replace('/\s+/', '-', $name));
-                        $uploadPath = 'public/uploads/product/';
-                        $image->move($uploadPath, $name);
-                        $imageUrl = $uploadPath . $name;
-                        File::delete($upvariable->image);
-                    } else {
-                        $imageUrl = $upvariable->image;
-                    }
-
-                    $upvariable->product_id       = $update_data->id;
-                    $upvariable->size             = $up_size ? $up_size[$key] : NULL;
-                    $upvariable->region            = $up_region ? $up_region[$key] : NULL;
-                    $upvariable->purchase_price   = isset($up_purchase[$key]) ? $up_purchase[$key] : reset($up_purchase);
-                    $upvariable->old_price        = isset($up_old_price[$key]) ? $up_old_price[$key] : reset($up_old_price);
-                    $upvariable->new_price        = isset($up_new_price[$key]) ? $up_new_price[$key] : reset($up_new_price);
-                    $upvariable->pro_barcode      = $up_pro_barcode ? $up_pro_barcode[$key] : NULL;
-                    $upvariable->stock            = $up_stock[$key];
-                    $upvariable->image            = $imageUrl;
+                    $upvariable = ProductVariable::find($update_id);
+                    $upvariable->product_id = $update_data->id;
+                    $upvariable->size = $up_size ? $up_size[$key] : NULL;
+                    $upvariable->region = $up_region ? $up_region[$key] : NULL;
+                    $upvariable->purchase_price = isset($up_purchase[$key]) ? $up_purchase[$key] : reset($up_purchase);
+                    $upvariable->old_price = isset($up_old_price[$key]) ? $up_old_price[$key] : reset($up_old_price);
+                    $upvariable->new_price = isset($up_new_price[$key]) ? $up_new_price[$key] : reset($up_new_price);
+                    $upvariable->pro_barcode = $this->barcode_generate();
+                    $upvariable->stock = $up_stock[$key];
                     $upvariable->save();
                 }
             }
         }
 
         if ($request->stocks) {
-            $size       = $request->sizes;
-            $region      = $request->regions;
-            $stocks     = array_filter($request->stocks);
-            $purchase   = $request->purchase_prices;
-            $old_price  = $request->old_prices;
-            $new_price  = $request->new_prices;
-            $images     = $request->file('images');
+            $size = $request->sizes;
+            $region = $request->regions;
+            $stocks = array_filter($request->stocks);
+            $purchase = $request->purchase_prices;
+            $old_price = $request->old_prices;
+            $new_price = $request->new_prices;
+            $images = $request->file('images');
             if (is_array($stocks)) {
                 foreach ($stocks as $key => $stock) {
 
                     if (isset($images[$key])) {
                         $image = $images[$key];
-                        $name =  time() . '-' . $image->getClientOriginalName();
+                        $name = time() . '-' . $image->getClientOriginalName();
                         $name = strtolower(preg_replace('/\s+/', '-', $name));
                         $uploadPath = 'public/uploads/product/';
                         $image->move($uploadPath, $name);
@@ -319,22 +294,23 @@ class ProductController extends Controller
                         $imageUrl = NULL;
                     }
 
-                    $variable                   = new ProductVariable();
-                    $variable->product_id       = $update_data->id;
-                    $variable->size             = $size ? $size[$key] : NULL;
-                    $variable->region            = $region ? $region[$key] : NULL;
-                    $variable->purchase_price   = isset($purchase[$key]) ? $purchase[$key] : reset($purchase);
-                    $variable->old_price        = isset($old_price[$key]) ? $old_price[$key] : reset($old_price);
-                    $variable->new_price        = isset($new_price[$key]) ? $new_price[$key] : reset($new_price);
-                    $variable->stock            = $stock;
-                    $variable->pro_barcode      = $pro_barcodes[$key] ?? '';
-                    $variable->image            = $imageUrl;
+                    $variable = new ProductVariable();
+                    $variable->product_id = $update_data->id;
+                    $variable->size = $size ? $size[$key] : NULL;
+                    $variable->region = $region ? $region[$key] : NULL;
+                    $variable->purchase_price = isset($purchase[$key]) ? $purchase[$key] : reset($purchase);
+                    $variable->old_price = isset($old_price[$key]) ? $old_price[$key] : reset($old_price);
+                    $variable->new_price = isset($new_price[$key]) ? $new_price[$key] : reset($new_price);
+                    $variable->stock = $stock;
+                    $variable->pro_barcode = $this->barcode_generate();
+                    $variable->image = $imageUrl;
                     $variable->save();
                 }
             }
         }
 
-        Toastr::success('Data update successfully', 'Success', ['positionClass' => 'toast-top-right']);;
+        Toastr::success('Data update successfully', 'Success', ['positionClass' => 'toast-top-right']);
+        ;
         return redirect()->route('products.index');
     }
 
@@ -435,26 +411,26 @@ class ProductController extends Controller
             $product->stock = +$request->qty;
             $product->save();
 
-            $parchase                   = new PurchaseDetails();
-            $parchase->product_id       = $product->product_id;
-            $parchase->purchase_price   = $product->purchase_price;
-            $parchase->old_price        = $product->old_price;
-            $parchase->new_price        = $product->new_price;
-            $parchase->stock            = $request->qty;
+            $parchase = new PurchaseDetails();
+            $parchase->product_id = $product->product_id;
+            $parchase->purchase_price = $product->purchase_price;
+            $parchase->old_price = $product->old_price;
+            $parchase->new_price = $product->new_price;
+            $parchase->stock = $request->qty;
             $parchase->save();
         } else {
             $product = ProductVariable::where('id', $request->product_id)->first();
             $product->stock = +$request->qty;
             $product->save();
 
-            $parchase                   = new PurchaseDetails();
-            $parchase->product_id       = $product->product_id;
-            $parchase->color            = $product->color;
-            $parchase->size             = $product->size;
-            $parchase->purchase_price   = $product->purchase_price;
-            $parchase->old_price        = $product->old_price;
-            $parchase->new_price        = $product->new_price;
-            $parchase->stock            = $request->qty;
+            $parchase = new PurchaseDetails();
+            $parchase->product_id = $product->product_id;
+            $parchase->color = $product->color;
+            $parchase->size = $product->size;
+            $parchase->purchase_price = $product->purchase_price;
+            $parchase->old_price = $product->old_price;
+            $parchase->new_price = $product->new_price;
+            $parchase->stock = $request->qty;
             $parchase->save();
         }
         Toastr::success('Success', 'Product purchase successfully');

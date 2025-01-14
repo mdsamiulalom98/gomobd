@@ -149,36 +149,11 @@
                                 </div>
                             </div>
 
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label for="image">Product Image (ctrl to multiple) *</label>
-                                    <div class="input-group control-group increment">
-                                        <input type="file" name="image[]" multiple
-                                            class="form-control @error('image') is-invalid @enderror" />
-                                        @error('image')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <div class="product_img">
-                                    @foreach ($edit_data->images as $image)
-                                        <img src="{{ asset($image->image) }}" class="edit-image border"
-                                            alt="" />
-                                        <a href="{{ route('products.image.destroy', ['id' => $image->id]) }}"
-                                            class="btn btn-xs btn-danger waves-effect waves-light"><i
-                                                class="mdi mdi-close"></i></a>
-                                    @endforeach
-                                </div>
-                            </div>
-
-                            <!-- col-end -->
                             <div class="col-sm-8 mb-4">
                                 <div class="form-group color-container">
                                     <label for="proColor" class="form-label">Color </label>
-                                    <select class="form-control select2" name="proColor[]" multiple="multiple">
+                                    <select class="form-control select2" name="proColor[]" multiple="multiple"
+                                        id="proColor">
                                         <option value="">Select..</option>
                                         @foreach ($colors as $color)
                                             <option value="{{ $color->id }}"
@@ -196,170 +171,70 @@
                             </div>
                             <!--col end -->
 
-
-                                <div class="variable_product">
-                                    <!-- variable edit part -->
-                                    @foreach ($variables as $variable)
-                                        <input type="hidden" value="{{ $variable->id }}" name="up_id[]">
-                                        <div class="row mb-2">
-                                            <div class="col-sm-2">
-                                                <div class="form-group">
-                                                    <label for="up_size" class="form-label">Size/Weight</label>
-                                                    <select class="form-control" name="up_sizes[]">
-                                                        <option value="">Select</option>
-                                                        @foreach ($sizes as $size)
-                                                            <option value="{{ $size->name }}"
-                                                                @if ($variable->size == $size->name) selected @endif>
-                                                                {{ $size->name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    @error('up_size')
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                            <!--col end -->
-                                            <div class="col-sm-2">
-                                                <div class="form-group">
-                                                    <label for="up_region" class="form-label">Region </label>
-                                                    <select class="form-control" name="up_regions[]">
-                                                        <option value="">Select</option>
-                                                        @foreach ($regions as $region)
-                                                            <option value="{{ $region->name }}"
-                                                                @if ($variable->region == $region->name) selected @endif>
-                                                                {{ $region->name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    @error('up_region')
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                            <!--col end -->
-
-                                            <div class="col-sm-2">
-                                                <div class="form-group">
-                                                    <label for="up_purchase_prices" class="form-label">Purchase Price
-                                                        *</label>
-                                                    <input type="text"
-                                                        class="form-control purchase_price @error('up_purchase_prices') is-invalid @enderror"
-                                                        name="up_purchase_prices[]"
-                                                        value="{{ $variable->purchase_price }}"
-                                                        id="up_purchase_prices" />
-                                                    @error('purchase_price')
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                            <!-- col-end -->
-                                            <!-- col-end -->
-                                            <div class="col-sm-2">
-                                                <div class="form-group">
-                                                    <label for="up_old_prices" class="form-label">Old Price</label>
-                                                    <input type="text"
-                                                        class="form-control old_price @error('up_old_prices') is-invalid @enderror"
-                                                        name="up_old_prices[]" value="{{ $variable->old_price }}"
-                                                        id="up_old_prices" />
-                                                    @error('old_prices')
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                            <!-- col-end -->
-                                            <div class="col-sm-2">
-                                                <div class="form-group">
-                                                    <label for="up_new_prices" class="form-label">New Price *</label>
-                                                    <input type="text"
-                                                        class="form-control new_price @error('up_new_prices') is-invalid @enderror"
-                                                        name="up_new_prices[]" value="{{ $variable->new_price }}"
-                                                        id="up_new_prices" />
-                                                    @error('up_new_prices')
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                            <!-- col-end -->
-                                            <div class="col-sm-2">
-                                                <div class="form-group">
-                                                    <label for="up_stocks" class="form-label">Stock *</label>
-                                                    <input type="text" class="form-control" name="up_stocks[]"
-                                                        value="{{ $variable->stock }}">
-                                                    @error('up_stocks')
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <div class="form-group">
-                                                    <label for="up_images">Color Image </label>
-                                                    <div class="input-group control-group">
-                                                        <input type="file" name="up_images[]"
-                                                            class="form-control @error('up_images') is-invalid @enderror" />
-                                                        <div class="input-group-btn">
-                                                        </div>
-                                                        @error('images[]')
-                                                            <span class="invalid-feedback" role="alert">
-                                                                <strong>{{ $message }}</strong>
-                                                            </span>
-                                                        @enderror
-                                                    </div>
-                                                </div>
-                                                @if ($variable->image)
-                                                    <img src="{{ asset($variable->image) }}"
-                                                        class="edit-image border mt-1">
-                                                @endif
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <div class="form-group">
-                                                    <label for="pro_barcodes" class="form-label">Product Barcode </label>
-                                                    <input type="text"
-                                                        class="form-control @error('stock') is-invalid @enderror"
-                                                        name="pro_barcodes[]" value="{{ old('pro_barcodes') }}"
-                                                        id="pro_barcodes">
-                                                    @error('pro_barcodes[]')
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-
-                                            <!-- col end -->
-                                            <div class="input-group-btn">
-                                                <a href="{{ route('products.price.destroy', ['id' => $variable->id]) }}"
-                                                    class="btn btn-danger btn-xs text-white"
-                                                    onclick="return confirm('Are you want delete this?')"
-                                                    type="button"><i class="mdi mdi-close"></i></a>
-                                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label for="image">Product Image *</label>
+                                    <div class="product_img">
+                                        @foreach ($edit_data->images as $image)
+                                            <img src="{{ asset($image->image) }}" class="edit-image border"
+                                                alt="" />
+                                            <a href="{{ route('products.image.destroy', ['id' => $image->id]) }}"
+                                                class="btn btn-xs btn-danger waves-effect waves-light"><i
+                                                    class="mdi mdi-close"></i></a>
+                                        @endforeach
+                                    </div>
+                                    <div class="image-block">
+                                        @for ($i = 0; $i < $blankInputCount; $i++)
+                                        <div class="input-group control-group increment">
+                                            <input type="file" name="image[]"
+                                                class="form-control @error('image') is-invalid @enderror" />
+                                            <button class="remove-btn btn btn-danger">
+                                                <i class="fe-x-circle"></i>
+                                            </button>
+                                            @error('image')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
                                         </div>
-                                    @endforeach
-                                    <!--edit variable product  end-->
+                                        @endfor
+                                    </div>
+                                </div>
+                            </div>
+                            <template id="blockTemplate">
+                                <div class="input-group control-group increment">
+                                    <input type="file" name="image[]"
+                                        class="form-control @error('image') is-invalid @enderror" />
+                                    <button class="remove-btn btn btn-danger">
+                                        <i class="fe-x-circle"></i>
+                                    </button>
+                                    @error('image')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </template>
 
-                                    <!-- new variable add-->
-                                    <div class="row mt-3">
+                            <!-- col-end -->
+
+                            <div class="variable_product">
+                                <!-- variable edit part -->
+                                @foreach ($variables as $variable)
+                                    <input type="hidden" value="{{ $variable->id }}" name="up_id[]">
+                                    <div class="row mb-2">
                                         <div class="col-sm-2">
                                             <div class="form-group">
-                                                <label for="roles" class="form-label">Size/Weight *</label>
-                                                <select class="form-control" name="sizes[]">
+                                                <label for="up_size" class="form-label">Size/Weight</label>
+                                                <select class="form-control" name="up_sizes[]">
                                                     <option value="">Select</option>
                                                     @foreach ($sizes as $size)
-                                                        <option value="{{ $size->name }}">{{ $size->name }}
-                                                        </option>
+                                                        <option value="{{ $size->name }}"
+                                                            @if ($variable->size == $size->name) selected @endif>
+                                                            {{ $size->name }}</option>
                                                     @endforeach
                                                 </select>
-                                                @error('sizes')
+                                                @error('up_size')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
                                                     </span>
@@ -369,12 +244,227 @@
                                         <!--col end -->
                                         <div class="col-sm-2">
                                             <div class="form-group">
-                                                <label for="region" class="form-label">region </label>
-                                                <select class="form-control" name="regions[]">
+                                                <label for="up_region" class="form-label">Region </label>
+                                                <select class="form-control" name="up_regions[]">
                                                     <option value="">Select</option>
                                                     @foreach ($regions as $region)
-                                                        <option value="{{ $region->name }}">{{ $region->name }}
+                                                        <option value="{{ $region->name }}"
+                                                            @if ($variable->region == $region->name) selected @endif>
+                                                            {{ $region->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                                @error('up_region')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <!--col end -->
+
+                                        <div class="col-sm-2">
+                                            <div class="form-group">
+                                                <label for="up_purchase_prices" class="form-label">Purchase Price
+                                                </label>
+                                                <input type="text"
+                                                    class="form-control purchase_price @error('up_purchase_prices') is-invalid @enderror"
+                                                    name="up_purchase_prices[]" value="{{ $variable->purchase_price }}"
+                                                    id="up_purchase_prices" />
+                                                @error('purchase_price')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <!-- col-end -->
+                                        <!-- col-end -->
+                                        <div class="col-sm-2">
+                                            <div class="form-group">
+                                                <label for="up_old_prices" class="form-label">Old Price</label>
+                                                <input type="text"
+                                                    class="form-control old_price @error('up_old_prices') is-invalid @enderror"
+                                                    name="up_old_prices[]" value="{{ $variable->old_price }}"
+                                                    id="up_old_prices" />
+                                                @error('old_prices')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <!-- col-end -->
+                                        <div class="col-sm-2">
+                                            <div class="form-group">
+                                                <label for="up_new_prices" class="form-label">New Price *</label>
+                                                <input type="text"
+                                                    class="form-control new_price @error('up_new_prices') is-invalid @enderror"
+                                                    name="up_new_prices[]" value="{{ $variable->new_price }}"
+                                                    id="up_new_prices" />
+                                                @error('up_new_prices')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <!-- col-end -->
+                                        <div class="col-sm-2">
+                                            <div class="form-group">
+                                                <label for="up_stocks" class="form-label">Stock *</label>
+                                                <input type="text" class="form-control" name="up_stocks[]"
+                                                    value="{{ $variable->stock }}">
+                                                @error('up_stocks')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+
+
+                                        <!-- col end -->
+                                        <div class="input-group-btn">
+                                            <a href="{{ route('products.price.destroy', ['id' => $variable->id]) }}"
+                                                class="btn btn-danger btn-xs text-white"
+                                                onclick="return confirm('Are you want delete this?')" type="button"><i
+                                                    class="mdi mdi-close"></i></a>
+                                        </div>
+                                    </div>
+                                @endforeach
+                                <!--edit variable product  end-->
+
+                                <!-- new variable add-->
+                                <div class="row mt-3">
+                                    <div class="col-sm-2">
+                                        <div class="form-group">
+                                            <label for="roles" class="form-label">Size/Weight *</label>
+                                            <select class="form-control" name="sizes[]">
+                                                <option value="">Select</option>
+                                                @foreach ($sizes as $size)
+                                                    <option value="{{ $size->name }}">{{ $size->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            @error('sizes')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <!--col end -->
+                                    <div class="col-sm-2">
+                                        <div class="form-group">
+                                            <label for="region" class="form-label">region </label>
+                                            <select class="form-control" name="regions[]">
+                                                <option value="">Select</option>
+                                                @foreach ($regions as $region)
+                                                    <option value="{{ $region->name }}">{{ $region->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            @error('region')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <!--col end -->
+
+                                    <div class="col-sm-2">
+                                        <div class="form-group">
+                                            <label for="purchase_prices" class="form-label">Purchase Price</label>
+                                            <input type="text"
+                                                class="form-control purchase_price @error('purchase_prices') is-invalid @enderror"
+                                                name="purchase_prices[]"
+                                                value="{{ $session_purchaseprice ?? old('purchase_prices') }}"
+                                                id="purchase_prices" />
+                                            @error('purchase_price')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <!-- col-end -->
+                                    <!-- col-end -->
+                                    <div class="col-sm-2">
+                                        <div class="form-group">
+                                            <label for="old_prices" class="form-label">Old Price</label>
+                                            <input type="text"
+                                                class="form-control old_price @error('old_prices') is-invalid @enderror"
+                                                name="old_prices[]" value="{{ old('old_prices') }}" id="old_prices" />
+                                            @error('old_prices')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <!-- col-end -->
+                                    <div class="col-sm-2">
+                                        <div class="form-group">
+                                            <label for="new_prices" class="form-label">New Price *</label>
+                                            <input type="text"
+                                                class="form-control new_price @error('new_prices') is-invalid @enderror"
+                                                name="new_prices[]" value="{{ old('new_prices') }}" id="new_prices" />
+                                            @error('new_prices')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <!-- col-end -->
+                                    <div class="col-sm-2">
+                                        <div class="form-group">
+                                            <label for="stocks" class="form-label">Stock *</label>
+                                            <input type="text" class="form-control" name="stocks[]">
+                                            @error('stocks')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <!-- col end -->
+                                    <div class="input-group-btn mt-2">
+                                        <button class="btn btn-success increment_btn  btn-xs text-white" type="button"><i
+                                                class="fa fa-plus"></i></button>
+                                    </div>
+                                </div>
+                                <div class="clone_variable" style="display:none">
+                                    <div class="row increment_control">
+                                        <div class="col-sm-2">
+                                            <div class="form-group">
+                                                <label for="roles" class="form-label">Size/Weight</label>
+                                                <select class="form-control" name="sizes[]">
+                                                    <option value="">Select</option>
+                                                    @foreach ($sizes as $size)
+                                                        <option value="{{ $size->name }}">{{ $size->name }}
                                                         </option>
+                                                    @endforeach
+                                                </select>
+                                                @error('size')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <!--col end -->
+                                        <div class="col-sm-2">
+                                            <div class="form-group">
+                                                <label for="region" class="form-label">Region </label>
+                                                <select class="form-control " name="regions[]">
+                                                    <option value="">Select</option>
+                                                    @foreach ($regions as $region)
+                                                        <option value="{{ $region->name }}">
+                                                            {{ $region->name }}</option>
                                                     @endforeach
                                                 </select>
                                                 @error('region')
@@ -385,23 +475,22 @@
                                             </div>
                                         </div>
                                         <!--col end -->
-
                                         <div class="col-sm-2">
                                             <div class="form-group">
-                                                <label for="purchase_prices" class="form-label">Purchase Price *</label>
+                                                <label for="purchase_prices" class="form-label">Purchase Price
+                                                </label>
                                                 <input type="text"
                                                     class="form-control purchase_price @error('purchase_prices') is-invalid @enderror"
                                                     name="purchase_prices[]"
                                                     value="{{ $session_purchaseprice ?? old('purchase_prices') }}"
                                                     id="purchase_prices" />
-                                                @error('purchase_price')
+                                                @error('purchase_prices')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
                                                     </span>
                                                 @enderror
                                             </div>
                                         </div>
-                                        <!-- col-end -->
                                         <!-- col-end -->
                                         <div class="col-sm-2">
                                             <div class="form-group">
@@ -436,37 +525,10 @@
                                         <div class="col-sm-2">
                                             <div class="form-group">
                                                 <label for="stocks" class="form-label">Stock *</label>
-                                                <input type="text" class="form-control" name="stocks[]">
-                                                @error('stocks')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-8 ">
-                                            <div class="form-group">
-                                                <label for="images">Color Image </label>
-                                                <div class="input-group control-group">
-                                                    <input type="file" name="images[]"
-                                                        class="form-control @error('images') is-invalid @enderror" />
-                                                    <div class="input-group-btn">
-                                                    </div>
-                                                    @error('images[]')
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- col end -->
-
-                                        <div class="col-sm-4">
-                                            <div class="form-group">
-                                                <label for="pro_barcodes" class="form-label">Product Barcode </label>
-                                                <input type="text" class="form-control" name="pro_barcodes[]">
-                                                @error('pro_barcodes')
+                                                <input type="text"
+                                                    class="form-control @error('stock') is-invalid @enderror"
+                                                    name="stocks[]" value="{{ old('stocks') }}" id="stocks">
+                                                @error('stocks[]')
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{ $message }}</strong>
                                                     </span>
@@ -475,145 +537,12 @@
                                         </div>
                                         <!-- col end -->
                                         <div class="input-group-btn mt-2">
-                                            <button class="btn btn-success increment_btn  btn-xs text-white"
-                                                type="button"><i class="fa fa-plus"></i></button>
-                                        </div>
-                                    </div>
-                                    <div class="clone_variable" style="display:none">
-                                        <div class="row increment_control">
-                                            <div class="col-sm-2">
-                                                <div class="form-group">
-                                                    <label for="roles" class="form-label">Size/Weight</label>
-                                                    <select class="form-control" name="sizes[]">
-                                                        <option value="">Select</option>
-                                                        @foreach ($sizes as $size)
-                                                            <option value="{{ $size->name }}">{{ $size->name }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                    @error('size')
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                            <!--col end -->
-                                            <div class="col-sm-2">
-                                                <div class="form-group">
-                                                    <label for="region" class="form-label">Region </label>
-                                                    <select class="form-control " name="regions[]">
-                                                        <option value="">Select</option>
-                                                        @foreach ($regions as $region)
-                                                            <option value="{{ $region->name }}">
-                                                                {{ $region->name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    @error('region')
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                            <!--col end -->
-                                            <div class="col-sm-2">
-                                                <div class="form-group">
-                                                    <label for="purchase_prices" class="form-label">Purchase Price
-                                                        *</label>
-                                                    <input type="text"
-                                                        class="form-control purchase_price @error('purchase_prices') is-invalid @enderror"
-                                                        name="purchase_prices[]"
-                                                        value="{{ $session_purchaseprice ?? old('purchase_prices') }}"
-                                                        id="purchase_prices" />
-                                                    @error('purchase_prices')
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                            <!-- col-end -->
-                                            <div class="col-sm-2">
-                                                <div class="form-group">
-                                                    <label for="old_prices" class="form-label">Old Price</label>
-                                                    <input type="text"
-                                                        class="form-control old_price @error('old_prices') is-invalid @enderror"
-                                                        name="old_prices[]" value="{{ old('old_prices') }}"
-                                                        id="old_prices" />
-                                                    @error('old_prices')
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                            <!-- col-end -->
-                                            <div class="col-sm-2">
-                                                <div class="form-group">
-                                                    <label for="new_prices" class="form-label">New Price *</label>
-                                                    <input type="text"
-                                                        class="form-control new_price @error('new_prices') is-invalid @enderror"
-                                                        name="new_prices[]" value="{{ old('new_prices') }}"
-                                                        id="new_prices" />
-                                                    @error('new_prices')
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                            <!-- col-end -->
-                                            <div class="col-sm-2">
-                                                <div class="form-group">
-                                                    <label for="stocks" class="form-label">Stock *</label>
-                                                    <input type="text"
-                                                        class="form-control @error('stock') is-invalid @enderror"
-                                                        name="stocks[]" value="{{ old('stocks') }}" id="stocks">
-                                                    @error('stocks[]')
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-
-                                            <div class="col-sm-8 ">
-                                                <div class="form-group">
-                                                    <label for="images">Color Image </label>
-                                                    <div class="input-group control-group">
-                                                        <input type="file" name="images[]"
-                                                            class="form-control @error('images') is-invalid @enderror" />
-                                                        <div class="input-group-btn">
-                                                        </div>
-                                                        @error('images[]')
-                                                            <span class="invalid-feedback" role="alert">
-                                                                <strong>{{ $message }}</strong>
-                                                            </span>
-                                                        @enderror
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- col end -->
-                                            <div class="col-sm-4">
-                                                <div class="form-group">
-                                                    <label for="pro_barcodes" class="form-label">Product Barcode</label>
-                                                    <input type="text" class="form-control" name="pro_barcodes[]">
-                                                    @error('pro_barcodes')
-                                                        <span class="invalid-feedback" role="alert">
-                                                            <strong>{{ $message }}</strong>
-                                                        </span>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                            <!-- col end -->
-                                            <div class="input-group-btn mt-2">
-                                                <button class="btn btn-danger remove_btn  btn-xs text-white"
-                                                    type="button"><i class="fa fa-trash"></i></button>
-                                            </div>
+                                            <button class="btn btn-danger remove_btn  btn-xs text-white" type="button"><i
+                                                    class="fa fa-trash"></i></button>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
                             <div class="col-sm-12 mb-3">
                                 <div class="form-group">
                                     <label for="description" class="form-label">Description *</label>
@@ -730,10 +659,7 @@
                                 </div>
                             </div>
                             <!-- col end -->
-
-
                             <!-- col end -->
-
                             <div>
                                 <input type="submit" class="btn btn-success" value="Submit" />
                             </div>
@@ -746,7 +672,8 @@
             <!-- end col-->
         </div>
     </div>
-    @endsection @section('script')
+@endsection
+@section('script')
     <script src="{{ asset('public/backEnd/') }}/assets/libs/parsleyjs/parsley.min.js"></script>
     <script src="{{ asset('public/backEnd/') }}/assets/js/pages/form-validation.init.js"></script>
     <script src="{{ asset('public/backEnd/') }}/assets/libs/select2/js/select2.min.js"></script>
@@ -757,11 +684,6 @@
         $(".summernote").summernote({
             placeholder: "Enter Your Text Here",
         });
-    </script>
-
-
-    <script>
-
     </script>
     <script>
         $(document).ready(function() {
@@ -831,6 +753,36 @@
             } else {
                 $("#childcategory_id").empty();
             }
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#proColor').on('change', function() {
+                const selectedItems = $(this).val(); // Get all selected items
+                const $clonedBlocksContainer = $('.image-block'); // Container for cloned blocks
+
+                // Loop through selected items and add only new blocks
+                if (selectedItems) {
+                    selectedItems.forEach(function(item) {
+                        // Check if the block for this item already exists
+                        if ($(`.increment[data-id="${item}"]`).length === 0) {
+                            const $template = $('#blockTemplate').html(); // Get the template
+                            const $clonedBlock = $($template); // Clone it
+
+                            // Set a unique identifier (data-id) for the block
+                            $clonedBlock.attr('data-id', item);
+
+                            // Append the block to the container
+                            $clonedBlocksContainer.append($clonedBlock);
+                        }
+                    });
+                }
+            });
+
+            // Event delegation for the remove button
+            $(document).on('click', '.remove-btn', function() {
+                $(this).closest('.increment').remove(); // Remove the specific block
+            });
         });
     </script>
     <script type="text/javascript">
