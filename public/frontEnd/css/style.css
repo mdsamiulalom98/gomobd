@@ -1882,6 +1882,29 @@ img.coupon-image {
 /*====  CART CSS END ====  */
 
 /*====  LOGIN CSS START ====  */
+.auth-section {
+    background-image: url('../images/auth-bg.jpg');
+    background-repeat: repeat-x;
+    width: 100%;
+    height: 100%;
+    background-color: var(--secondary-color);
+    position: relative;
+    background-position: 0px 0px;
+    animation: animatedBackground 10s linear infinite;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+@keyframes animatedBackground {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 100% 0;
+    }
+}
 .auth-section input,
 .auth-section input:focus {
     border: 1px solid #ddd;
@@ -3374,4 +3397,64 @@ a.seller_shop {
 .fade {
     color: #666;
     font-size: 13px;
+}
+.sorting-section {
+    margin-bottom: 20px;
+}
+.blog-item {
+    border-radius: 5px;
+    overflow: hidden;
+}
+.blog-img img {
+    height: 242px;
+    display: block;
+    margin: 0 auto;
+}
+
+.blog-text {
+    border: 1px solid #ddd;
+    padding: 15px;
+}
+
+.blog-text h5 {
+    margin-bottom: 10px;
+    font-size: 20px;
+}
+.blog-btn {
+    background: #0066ab;
+    color: #fff;
+    padding: 8px 21px;
+    display: inline-block;
+    border-radius: 5px;
+    transition: 0.35s all;
+}
+.blog-sidebar {
+    background: #FDFDFD;
+    padding: 20px;
+}
+.blog-sidebar h6 {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.sblog-item {
+    display: grid;
+    grid-template-columns: 30% auto;
+    gap: 15px;
+    background: #fff;
+    padding: 15px;
+    margin: 15px 0;
+}
+.blog-sidebar h6 {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.bdetails-img img {
+    width: 100%;
+}
+
+.blog-article h5 {
+    margin: 20px 0;
+    font-weight: 600;
 }

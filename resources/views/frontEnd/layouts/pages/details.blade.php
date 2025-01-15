@@ -689,20 +689,20 @@
     <script>
         function sendSuccess() {
             // size validation
-            if (document.forms["formName"]["product_size"]) {
-                size = document.forms["formName"]["product_size"].value;
-                if (size != "") {} else {
-                    toastr.warning("Please select any size");
-                    return false;
-                }
-            }
-            if (document.forms["formName"]["product_color"]) {
-                color = document.forms["formName"]["product_color"].value;
-                if (color != "") {} else {
-                    toastr.error("Please select any color");
-                    return false;
-                }
-            }
+            // if (document.forms["formName"]["product_size"]) {
+            //     size = document.forms["formName"]["product_size"].value;
+            //     if (size != "") {} else {
+            //         toastr.warning("Please select any size");
+            //         return false;
+            //     }
+            // }
+            // if (document.forms["formName"]["product_color"]) {
+            //     color = document.forms["formName"]["product_color"].value;
+            //     if (color != "") {} else {
+            //         toastr.error("Please select any color");
+            //         return false;
+            //     }
+            // }
         }
     </script>
     <script>

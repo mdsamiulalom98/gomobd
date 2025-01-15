@@ -29,6 +29,7 @@ use App\Models\Brand;
 use App\Models\CampaignPro;
 use App\Models\Productcolor;
 use App\Models\Seller;
+use App\Models\Blog;
 use Cache;
 use DB;
 use Log;
@@ -602,5 +603,15 @@ class FrontendController extends Controller
             }
         }
         return count($seller_orders);
+    }
+
+    public function blogs(){
+        $blogs = Blog::where('status',1)->paginate(20);
+        return view('frontEnd.layouts.pages.blogs', compact('blogs'));
+    }
+    public function blog_details($slug){
+        $details = Blog::where('status',1)->where('slug',$slug)->first();
+        $blogs = Blog::where('status',1)->limit(10)->get();
+        return view('frontEnd.layouts.pages.blog_details', compact('details','blogs'));
     }
 }

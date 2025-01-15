@@ -22,9 +22,10 @@ class ShoppingController extends Controller
         $old_price = $var_product ? $var_product->old_price : 0;
         $new_price = $var_product ? $var_product->new_price : 0;
         $stock = $var_product ? $var_product->stock : 0;
+        $emi_amount = 0;
+        $down_payment = 0;
+        $monthly_installment = 0;
 
-
-        // Adjust $new_price if necessary here
         if ($new_price <= 0) {
             $new_price = $old_price > 0 ? $old_price : $purchase_price;
         }

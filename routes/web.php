@@ -9,6 +9,9 @@ use App\Http\Controllers\Frontend\ShoppingController;
 use App\Http\Controllers\Frontend\CustomerController;
 use App\Http\Controllers\Frontend\BkashController;
 use App\Http\Controllers\Frontend\ShurjopayControllers;
+use App\Http\Controllers\Frontend\SellerController;
+use App\Http\Controllers\Frontend\SellerProductController;
+
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\UserController;
@@ -41,10 +44,8 @@ use App\Http\Controllers\Admin\CouponCodeController;
 use App\Http\Controllers\Admin\DistrictController;
 use App\Http\Controllers\Admin\CampaignProController;
 use App\Http\Controllers\Admin\SellerManageController;
-use App\Http\Controllers\Frontend\SellerController;
-use App\Http\Controllers\Frontend\SellerProductController;
-use App\Http\Controllers\Frontend\SellerWalletController;
 use App\Http\Controllers\Admin\RegionController;
+use App\Http\Controllers\Admin\BlogController;
 
 Auth::routes();
 
@@ -87,6 +88,8 @@ Route::group(['namespace' => 'Frontend', 'middleware' => ['ipcheck', 'check_refe
     Route::get('/payment-cancel', [FrontEndController::class, 'payment_cancel'])->name('payment_cancel');
     Route::get('/top-offer', [FrontEndController::class, 'topOffer'])->name('topOffer');
     Route::get('/offerProduct/{id}', [FrontEndController::class, 'offerProduct'])->name('offerProduct');
+    Route::get('blogs', [FrontendController::class, 'blogs'])->name('blogs');
+    Route::get('blog-details/{slug}', [FrontendController::class, 'blog_details'])->name('blog.details');
 
     // cart route
     Route::post('cart/store', [ShoppingController::class, 'cart_store'])->name('cart.store');
@@ -605,4 +608,16 @@ Route::group(['namespace' => 'Admin', 'middleware' => ['auth', 'lock', 'check_re
     Route::post('region/inactive', [RegionController::class, 'inactive'])->name('regions.inactive');
     Route::post('region/active', [RegionController::class, 'active'])->name('regions.active');
     Route::post('region/destroy', [RegionController::class, 'destroy'])->name('regions.destroy');
+
+    // Blog route
+    Route::get('blogs', [BlogController::class, 'index'])->name('blogs.index');
+    Route::get('blogs/pending', [BlogController::class, 'pending'])->name('blogs.pending');
+    Route::post('blogs/inactive', [BlogController::class, 'inactive'])->name('blogs.inactive');
+    Route::post('blogs/active', [BlogController::class, 'active'])->name('blogs.active');
+    Route::get('blogs/create', [BlogController::class, 'create'])->name('blogs.create');
+    Route::post('blogs/save', [BlogController::class, 'store'])->name('blogs.store');
+    Route::get('blogs/{id}/edit', [BlogController::class, 'edit'])->name('blogs.edit');
+    Route::post('blogs/update', [BlogController::class, 'update'])->name('blogs.update');
+    Route::post('blogs/destroy', [BlogController::class, 'destroy'])->name('blogs.destroy');
+
 });

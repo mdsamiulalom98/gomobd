@@ -569,6 +569,26 @@
                             </div>
                         </li>
                         <!-- nav items end -->
+                        <li>
+                            <a href="#siebar-blogs" data-bs-toggle="collapse">
+                                <i data-feather="book"></i>
+                                <span> Blogs </span>
+                                <span class="menu-arrow"></span>
+                            </a>
+                            <div class="collapse" id="siebar-blogs">
+                                <ul class="nav-second-level">
+                                    <li>
+                                        <a href="{{ route('blogs.create') }}"><i
+                                                data-feather="file-plus"></i> Create</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('blogs.index') }}"><i
+                                                data-feather="file-plus"></i> Manage</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <!-- nav items end -->
                         <!-- expense-start -->
                         <li>
                             <a href="#siebar-expense" data-bs-toggle="collapse">
