@@ -24,7 +24,7 @@ class Category extends Model
     }
     public function products()
     {
-        return $this->hasMany(Product::class, 'category_id')->select('id','category_id','status','approval')->where(['status'=>1,'approval'=>1]);
+        return $this->hasMany(Product::class, 'category_id')->select('id','name','category_id','new_price','old_price','status','approval')->where(['status'=>1,'approval'=>1]);
     }
 
 }

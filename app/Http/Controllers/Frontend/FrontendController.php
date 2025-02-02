@@ -54,6 +54,8 @@ class FrontendController extends Controller
             ->withCount('variable')
             ->limit(12)
             ->get();
+            
+        // return $hotdeal_top;
 
         $homecategory = Category::where(['front_view' => 1, 'status' => 1])
             ->select('id', 'name', 'slug', 'front_view', 'status')
@@ -63,6 +65,7 @@ class FrontendController extends Controller
         $brands = Brand::where(['status' => 1])
             ->orderBy('id', 'ASC')
             ->get();
+            
 
         return view('frontEnd.layouts.pages.index', compact('sliders', 'hotdeal_top', 'homecategory', 'sliderrightads', 'brands'));
     }
@@ -252,6 +255,7 @@ class FrontendController extends Controller
             ->with('image', 'images', 'category', 'subcategory', 'childcategory')
             ->withCount('variableimages')
             ->firstOrFail();
+
         $products = Product::where(['category_id' => $details->category_id, 'status' => 1])
             ->with('image')
             ->select('id', 'name', 'slug', 'status', 'approval', 'status', 'category_id', 'new_price', 'old_price', 'type')
@@ -262,9 +266,10 @@ class FrontendController extends Controller
 
         $reviews = Review::where('product_id', $details->id)->get();
 
-        $productcolors = Productcolor::where('product_id', $details->id)
+        $productcolors = Productcolor::where('product_id', $details->id)->with('color')
             ->distinct()
             ->get();
+        // return $productcolors;
 
         $productregions = ProductVariable::where('product_id', $details->id)->where('stock', '>', 0)
             ->whereNotNull('region')
@@ -277,6 +282,7 @@ class FrontendController extends Controller
             ->select('size')
             ->distinct()
             ->get();
+        // return $productsizes;
         $seller_info = Seller::find($details->seller_id);
         $imagesArray = $details->images->toArray();
         // $variablesArray = $details->variableimages->toArray();
@@ -312,6 +318,7 @@ class FrontendController extends Controller
 
         return view('frontEnd.layouts.pages.seller_shop', compact('products', 'seller_info'));
     }
+    
     public function stock_check(Request $request)
     {
         $product = ProductVariable::where(['product_id' => $request->id, 'region' => $request->region, 'size' => $request->size])->select('id', 'product_id', 'old_price', 'new_price', 'stock')->first();
@@ -344,6 +351,7 @@ class FrontendController extends Controller
         ];
         return response()->json($response);
     }
+    
     public function quickview(Request $request)
     {
         $data['data'] = Product::where(['id' => $request->id, 'status' => 1])->with('images')->withCount('reviews')->first();
